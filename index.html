@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Solai AI</title>
+    <title>Sol AI</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         * {
@@ -259,7 +259,7 @@
     <!-- Sidebar -->
     <div class="sidebar">
         <div class="sidebar-brand">
-            🌸 <span>Solai AI</span>
+            🌸 <span>Sol AI</span>
         </div>
         <button class="new-chat-btn" onclick="location.reload()">+ New chat</button>
     </div>
@@ -267,19 +267,16 @@
     <!-- Main Chat Content -->
     <div class="main-container">
         <div class="chat-header">
-            Solai <span>AI</span>
+            Sol <span>AI</span>
         </div>
 
         <div class="chat-history" id="chatHistory">
-            <div class="message ai">
-                <div class="avatar">S</div>
-                <div class="bubble">Hello! I am Solai, your aesthetic assistant. How can I help you today?</div>
-            </div>
+            <!-- Chat history starts completely clean with no initial message -->
         </div>
 
         <div class="input-container">
             <div class="input-box">
-                <textarea id="userInput" rows="1" placeholder="Message Solai..." onkeydown="handleKey(event)"></textarea>
+                <textarea id="userInput" rows="1" placeholder="Message Sol AI..." onkeydown="handleKey(event)"></textarea>
                 <button class="send-btn" onclick="askAI()">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
                 </button>
@@ -391,7 +388,7 @@
                 aiBubble.innerHTML = formatAIResponse(data.reply || "No response received.");
             } catch (err) {
                 const aiBubble = document.querySelector(`#${loadingId} .bubble`);
-                aiBubble.innerText = "Error connecting to Solai backend.";
+                aiBubble.innerText = "Error connecting to Sol AI backend.";
             }
             chatHistory.scrollTop = chatHistory.scrollHeight;
         }
