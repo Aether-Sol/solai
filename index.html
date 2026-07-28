@@ -3,18 +3,18 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-    <title>Sol AI - GroqCloud Experience</title>
+    <title>Sol AI - Groq Edition</title>
     <style>
       :root {
-        --bg-deep: #090610;
-        --bg-surface: #130d20;
-        --border-color: rgba(192, 132, 252, 0.15);
-        --primary: #c084fc;
-        --text-main: #f3e8ff;
-        --text-muted: #a78bfa;
-        --gradient-start: #e879f9;
-        --gradient-end: #c084fc;
-        --msg-user: linear-gradient(135deg, #7e22ce, #6b21a8);
+        --bg-deep: #121212;
+        --bg-surface: #1e1e1e;
+        --border-color: rgba(255, 255, 255, 0.1);
+        --primary: #3b82f6;
+        --text-main: #f9fafb;
+        --text-muted: #9ca3af;
+        --gradient-start: #60a5fa;
+        --gradient-end: #3b82f6;
+        --msg-user: linear-gradient(135deg, #2563eb, #1d4ed8);
       }
 
       * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
@@ -97,23 +97,11 @@
         position: relative;
       }
 
-      .api-key-btn {
-        background: rgba(192, 132, 252, 0.1);
-        border: 1px solid var(--border-color);
-        color: var(--primary);
-        padding: 7px 10px;
-        border-radius: 9px;
-        font-size: 0.78rem;
-        font-weight: 600;
-        cursor: pointer;
-        text-decoration: none;
-        white-space: nowrap;
-      }
-
       .user-avatar-badge { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end)); color: #fff; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.9rem; flex-shrink: 0; }
-      .user-dropdown-menu { position: absolute; top: 46px; right: 0; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 12px; width: 130px; display: none; flex-direction: column; padding: 4px; z-index: 500; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+      .user-dropdown-menu { position: absolute; top: 46px; right: 0; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 12px; width: 140px; display: none; flex-direction: column; padding: 4px; z-index: 500; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
       .user-dropdown-menu.active { display: flex; }
-      .dropdown-item.logout { background: transparent; border: none; color: #ef4444; padding: 9px 12px; text-align: left; cursor: pointer; font-weight: 600; font-size: 0.85rem; border-radius: 8px; }
+      .dropdown-item { background: transparent; border: none; color: var(--text-main); padding: 9px 12px; text-align: left; cursor: pointer; font-weight: 500; font-size: 0.85rem; border-radius: 8px; }
+      .dropdown-item:hover { background: rgba(255,255,255,0.05); }
 
       .chat-messages-container { 
         flex: 1; 
@@ -179,31 +167,6 @@
         margin-bottom: 2px;
       }
 
-      /* AUTH OVERLAY */
-      .auth-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(9, 6, 16, 0.95); backdrop-filter: blur(16px); display: flex; align-items: center; justify-content: center; z-index: 2000; padding: 16px; }
-      .auth-overlay.hidden { display: none !important; }
-      .auth-card { background: var(--bg-surface); border: 1px solid var(--border-color); width: 380px; max-width: 100%; border-radius: 18px; padding: 24px; display: flex; flex-direction: column; gap: 14px; box-shadow: 0 20px 40px rgba(0,0,0,0.6); }
-      .auth-title { font-size: 1.35rem; font-weight: 700; text-align: center; color: var(--primary); }
-      .auth-field { display: flex; flex-direction: column; gap: 5px; }
-      .auth-label { font-size: 0.72rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; }
-      .auth-input { background: var(--bg-deep); border: 1px solid var(--border-color); border-radius: 9px; padding: 10px; color: var(--text-main); outline: none; font-size: 0.9rem; }
-      .auth-btn { background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end)); color: #fff; border: none; padding: 10px; border-radius: 9px; font-weight: 600; cursor: pointer; font-size: 0.9rem; }
-      
-      .api-link-box {
-        font-size: 0.8rem;
-        color: var(--text-muted);
-        text-align: center;
-        background: rgba(255,255,255,0.02);
-        padding: 8px;
-        border-radius: 8px;
-        border: 1px dashed var(--border-color);
-      }
-      .api-link-box a {
-        color: var(--primary);
-        text-decoration: underline;
-        font-weight: 600;
-      }
-
       .sidebar-backdrop { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 99; display: none; }
       .sidebar-backdrop.active { display: block; }
 
@@ -235,11 +198,10 @@
         <header class="chat-header">
           <button class="mobile-menu-toggle" id="mobileMenuBtn">&#9776;</button>
           <div class="header-right">
-            <button class="api-key-btn" id="apiKeySettingsBtn">GroqCloud Key</button>
             <div class="user-menu-container">
               <div class="user-avatar-badge" id="userAvatarBadge">A</div>
               <div class="user-dropdown-menu" id="userDropdown">
-                <button class="dropdown-item logout" id="logoutBtn">Logout</button>
+                <button class="dropdown-item">Sol AI v2.0</button>
               </div>
             </div>
           </div>
@@ -247,7 +209,7 @@
 
         <div class="chat-messages-container" id="chatMessages">
           <div class="message-wrapper assistant">
-            <div class="message-bubble">Hello! Enter your GroqCloud API key to start chatting.</div>
+            <div class="message-bubble">Hello! I am Sol AI. How can I help you today?</div>
           </div>
         </div>
 
@@ -260,37 +222,12 @@
       </main>
     </div>
 
-    <!-- AUTH OVERLAY -->
-    <div class="auth-overlay" id="authOverlay">
-      <div class="auth-card">
-        <div class="auth-title" id="overlayTitle">Welcome to Sol Ai</div>
-        <div id="overlayDesc" style="font-size: 0.82rem; color: var(--text-muted); text-align: center;">Enter your GroqCloud API key to connect.</div>
-        
-        <div class="api-link-box">
-          Get your key from GroqCloud Console:<br>
-          <a href="https://console.groq.com" target="_blank" rel="noopener noreferrer">console.groq.com</a>
-        </div>
-
-        <div style="display: flex; flex-direction: column; gap: 12px;">
-          <div class="auth-field">
-            <label class="auth-label">GroqCloud API Key</label>
-            <input type="password" class="auth-input" id="apiKeyInput" placeholder="gsk_..." />
-          </div>
-          <button type="button" class="auth-btn" id="saveKeyBtn">Start Chatting</button>
-        </div>
-      </div>
-    </div>
-
     <script>
-      const authOverlay = document.getElementById('authOverlay');
-      const apiKeyInput = document.getElementById('apiKeyInput');
-      const saveKeyBtn = document.getElementById('saveKeyBtn');
-      const apiKeySettingsBtn = document.getElementById('apiKeySettingsBtn');
-      
-      const logoutBtn = document.getElementById('logoutBtn');
+      // Stitched API Key
+      const GROQ_API_KEY = "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";
+
       const userAvatarBadge = document.getElementById('userAvatarBadge');
       const userDropdown = document.getElementById('userDropdown');
-      
       const mobileMenuBtn = document.getElementById('mobileMenuBtn');
       const sidebar = document.getElementById('sidebar');
       const backdrop = document.getElementById('sidebarBackdrop');
@@ -299,38 +236,6 @@
       const sendBtn = document.getElementById('sendBtn');
       const chatMessages = document.getElementById('chatMessages');
       const newChatBtn = document.getElementById('newChatBtn');
-
-      let groqApiKey = localStorage.getItem('sol_groqcloud_api_key') || '';
-
-      if (groqApiKey) {
-        authOverlay.classList.add('hidden');
-      }
-
-      saveKeyBtn.addEventListener('click', () => {
-        const key = apiKeyInput.value.trim();
-        if (!key) {
-          alert('Please enter a valid GroqCloud API key.');
-          return;
-        }
-        groqApiKey = key;
-        localStorage.setItem('sol_groqcloud_api_key', key);
-        authOverlay.classList.add('hidden');
-      });
-
-      apiKeySettingsBtn.addEventListener('click', () => {
-        apiKeyInput.value = groqApiKey;
-        document.getElementById('overlayTitle').textContent = "API Configuration";
-        authOverlay.classList.remove('hidden');
-      });
-
-      logoutBtn.addEventListener('click', () => {
-        localStorage.removeItem('sol_groqcloud_api_key');
-        groqApiKey = '';
-        apiKeyInput.value = '';
-        document.getElementById('overlayTitle').textContent = "Welcome to Sol Ai";
-        authOverlay.classList.remove('hidden');
-        userDropdown.classList.remove('active');
-      });
 
       userAvatarBadge.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -368,7 +273,7 @@
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': `Bearer ${groqApiKey}`
+              'Authorization': `Bearer ${GROQ_API_KEY}`
             },
             body: JSON.stringify({
               model: 'llama-3.3-70b-versatile',
@@ -411,12 +316,6 @@
         const text = chatInput.value.trim();
         if (!text) return;
 
-        if (!groqApiKey) {
-          alert('Please set your GroqCloud API key first.');
-          authOverlay.classList.remove('hidden');
-          return;
-        }
-
         appendMessage('user', text);
         chatInput.value = '';
         chatInput.style.height = 'auto';
@@ -433,4 +332,4 @@
       });
     </script>
   </body>
-</html>I 
+</html>
