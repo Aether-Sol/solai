@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -114,11 +115,19 @@
         position: relative;
       }
 
-      .user-avatar-badge { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end)); color: #fff; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.9rem; flex-shrink: 0; }
-      .user-dropdown-menu { position: absolute; top: 46px; right: 0; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 12px; width: 140px; display: none; flex-direction: column; padding: 4px; z-index: 500; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
-      .user-dropdown-menu.active { display: flex; }
-      .dropdown-item { background: transparent; border: none; color: var(--text-main); padding: 9px 12px; text-align: left; cursor: pointer; font-weight: 500; font-size: 0.85rem; border-radius: 8px; }
-      .dropdown-item:hover { background: rgba(255,255,255,0.05); }
+      /* Neon Sol AI Style */
+      .neon-title {
+        font-size: 1.2rem;
+        font-weight: 800;
+        color: #fff;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        text-shadow: 
+          0 0 5px rgba(59, 130, 246, 0.8), 
+          0 0 10px rgba(59, 130, 246, 0.8), 
+          0 0 20px rgba(59, 130, 246, 0.5), 
+          0 0 40px rgba(59, 130, 246, 0.3);
+      }
 
       .chat-messages-container { 
         flex: 1; 
@@ -217,12 +226,7 @@
         <header class="chat-header">
           <button class="mobile-menu-toggle" id="mobileMenuBtn">&#9776;</button>
           <div class="header-right">
-            <div class="user-menu-container">
-              <div class="user-avatar-badge" id="userAvatarBadge">A</div>
-              <div class="user-dropdown-menu" id="userDropdown">
-                <button class="dropdown-item">Sol AI v2.0</button>
-              </div>
-            </div>
+            <div class="neon-title">Sol Ai</div>
           </div>
         </header>
 
@@ -244,8 +248,6 @@
     <script>
       const GROQ_API_KEY = "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";
 
-      const userAvatarBadge = document.getElementById('userAvatarBadge');
-      const userDropdown = document.getElementById('userDropdown');
       const mobileMenuBtn = document.getElementById('mobileMenuBtn');
       const sidebar = document.getElementById('sidebar');
       const backdrop = document.getElementById('sidebarBackdrop');
@@ -256,7 +258,6 @@
       const newChatBtn = document.getElementById('newChatBtn');
       const historyList = document.getElementById('historyList');
 
-      // Full conversation storage for context memory and history sidebar display
       let conversationHistory = [];
       let savedConversations = JSON.parse(localStorage.getItem('sol_chat_history') || '[]');
 
@@ -287,12 +288,6 @@
         });
       }
 
-      userAvatarBadge.addEventListener('click', (e) => {
-        e.stopPropagation();
-        userDropdown.classList.toggle('active');
-      });
-      document.addEventListener('click', () => userDropdown.classList.remove('active'));
-
       function toggleMenu() {
         sidebar.classList.toggle('open');
         backdrop.classList.toggle('active');
@@ -318,7 +313,7 @@
         const firstUserMsg = conversationHistory.find(m => m.role === 'user');
         const title = firstUserMsg ? firstUserMsg.content.slice(0, 30) + '...' : 'New Chat';
         savedConversations.unshift({ title, messages: [...conversationHistory] });
-        if (savedConversations.length > 15) savedConversations.pop(); // keep last 15
+        if (savedConversations.length > 15) savedConversations.pop();
         localStorage.setItem('sol_chat_history', JSON.stringify(savedConversations));
         renderHistory();
       }
@@ -333,7 +328,6 @@
         chatMessages.scrollTop = chatMessages.scrollHeight;
 
         try {
-          // Push user message to conversation memory array
           conversationHistory.push({ role: 'user', content: promptText });
 
           const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
@@ -400,7 +394,6 @@
         }
       });
 
-      // Load initial history sidebar view
       renderHistory();
     </script>
   </body>
