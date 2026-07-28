@@ -2,8 +2,8 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sol AI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Sol AI - Live API Experience</title>
     <style>
       :root {
         --bg-deep: #090610;
@@ -18,117 +18,246 @@
       }
 
       * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, sans-serif; }
-      body { background-color: var(--bg-deep); color: var(--text-main); height: 100vh; display: flex; overflow: hidden; }
+      
+      html, body {
+        background-color: var(--bg-deep);
+        color: var(--text-main);
+        height: 100%;
+        height: 100dvh;
+        overflow: hidden;
+        position: fixed;
+        width: 100%;
+      }
+
+      .app-container {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        height: 100dvh;
+        position: relative;
+      }
 
       .sidebar {
-        width: 280px; background-color: var(--bg-surface); border-right: 1px solid var(--border-color);
-        display: flex; flex-direction: column; z-index: 100; transition: transform 0.3s ease-in-out; flex-shrink: 0;
+        width: 280px; 
+        background-color: var(--bg-surface); 
+        border-right: 1px solid var(--border-color);
+        display: flex; 
+        flex-direction: column; 
+        z-index: 100; 
+        transition: transform 0.3s ease-in-out; 
+        flex-shrink: 0;
+        height: 100%;
       }
-      .sidebar-top { padding: 20px; font-weight: 800; font-size: 1.6rem; color: var(--primary); }
+      .sidebar-top { padding: 20px; font-weight: 800; font-size: 1.6rem; color: var(--primary); display: flex; align-items: center; justify-content: space-between; }
       .sidebar-actions { padding: 0 16px 16px; }
       .btn-new-chat { background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end)); color: #fff; border: none; padding: 11px; border-radius: 10px; width: 100%; font-weight: 600; cursor: pointer; }
-      .recent-chats-container { flex: 1; padding: 0 16px; color: var(--text-muted); font-size: 0.85rem; }
+      .recent-chats-container { flex: 1; padding: 0 16px; color: var(--text-muted); font-size: 0.85rem; overflow-y: auto; }
       .sidebar-footer { padding: 14px 16px; font-size: 0.75rem; color: var(--text-muted); border-top: 1px solid var(--border-color); }
 
-      .main-content { flex: 1; display: flex; flex-direction: column; height: 100vh; position: relative; overflow: hidden; }
-      .chat-header { padding: 18px 28px; border-bottom: 1px solid var(--border-color); background: var(--bg-surface); display: flex; justify-content: flex-end; align-items: center; gap: 14px; }
-      .mobile-menu-toggle { display: none; background: var(--bg-deep); border: 1px solid var(--border-color); color: var(--text-main); padding: 8px 12px; border-radius: 10px; cursor: pointer; }
+      .main-content { 
+        flex: 1; 
+        display: flex; 
+        flex-direction: column; 
+        height: 100%;
+        height: 100dvh;
+        position: relative; 
+        overflow: hidden; 
+      }
+      
+      .chat-header { 
+        padding: 14px 20px; 
+        border-bottom: 1px solid var(--border-color); 
+        background: var(--bg-surface); 
+        display: flex; 
+        justify-content: space-between; 
+        align-items: center; 
+        flex-shrink: 0;
+      }
+      
+      .mobile-menu-toggle { 
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        background: var(--bg-deep); 
+        border: 1px solid var(--border-color); 
+        color: var(--text-main); 
+        padding: 8px 12px; 
+        border-radius: 10px; 
+        cursor: pointer; 
+      }
 
-      .user-avatar-badge { width: 42px; height: 42px; border-radius: 50%; background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end)); color: #fff; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-      .user-dropdown-menu { position: absolute; top: 70px; right: 28px; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 14px; width: 140px; display: none; flex-direction: column; padding: 6px; z-index: 500; }
+      .header-right {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        position: relative;
+      }
+
+      .api-key-btn {
+        background: rgba(192, 132, 252, 0.1);
+        border: 1px solid var(--border-color);
+        color: var(--primary);
+        padding: 8px 12px;
+        border-radius: 10px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .user-avatar-badge { width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end)); color: #fff; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+      .user-dropdown-menu { position: absolute; top: 50px; right: 0; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 14px; width: 140px; display: none; flex-direction: column; padding: 6px; z-index: 500; }
       .user-dropdown-menu.active { display: flex; }
       .dropdown-item.logout { background: transparent; border: none; color: #ef4444; padding: 10px; text-align: left; cursor: pointer; font-weight: 600; }
 
-      .chat-messages-container { flex: 1; overflow-y: auto; padding: 24px; display: flex; flex-direction: column; gap: 20px; }
+      .chat-messages-container { 
+        flex: 1; 
+        overflow-y: auto; 
+        padding: 16px; 
+        display: flex; 
+        flex-direction: column; 
+        gap: 16px; 
+      }
+      
       .message-wrapper { display: flex; max-width: 800px; width: 100%; margin: 0 auto; }
       .message-wrapper.user { justify-content: flex-end; }
-      .message-bubble { padding: 14px 18px; border-radius: 16px; font-size: 0.95rem; line-height: 1.5; }
+      .message-bubble { padding: 12px 16px; border-radius: 16px; font-size: 0.92rem; line-height: 1.4; word-break: break-word; }
       .message-wrapper.user .message-bubble { background: var(--msg-user); color: #fff; }
       .message-wrapper.assistant .message-bubble { background: var(--bg-surface); border: 1px solid var(--border-color); color: var(--text-main); }
 
-      .chat-input-area { padding: 16px 24px; background: var(--bg-surface); border-top: 1px solid var(--border-color); display: flex; gap: 14px; max-width: 900px; width: calc(100% - 48px); margin: 0 auto 20px; border-radius: 16px; }
-      .chat-input { flex: 1; background: var(--bg-deep); border: 1px solid var(--border-color); border-radius: 12px; padding: 12px; color: var(--text-main); outline: none; resize: none; }
-      .send-btn { background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end)); border: none; color: #fff; width: 42px; height: 42px; border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+      /* Fixed bottom input wrapper to prevent clipping */
+      .chat-input-wrapper {
+        padding: 10px 16px env(safe-area-inset-bottom, 10px) 16px;
+        background: var(--bg-surface);
+        border-top: 1px solid var(--border-color);
+        flex-shrink: 0;
+      }
+
+      .chat-input-area { 
+        display: flex; 
+        align-items: flex-end;
+        gap: 10px; 
+        max-width: 900px; 
+        width: 100%; 
+        margin: 0 auto; 
+        background: var(--bg-deep);
+        border: 1px solid var(--border-color);
+        border-radius: 14px;
+        padding: 8px 12px;
+      }
+      
+      .chat-input { 
+        flex: 1; 
+        background: transparent; 
+        border: none; 
+        color: var(--text-main); 
+        outline: none; 
+        resize: none; 
+        max-height: 100px;
+        font-size: 0.95rem;
+        padding: 4px 0;
+      }
+      
+      .send-btn { 
+        background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end)); 
+        border: none; 
+        color: #fff; 
+        width: 36px; 
+        height: 36px; 
+        border-radius: 10px; 
+        cursor: pointer; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        flex-shrink: 0;
+      }
 
       /* AUTH OVERLAY */
       .auth-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(9, 6, 16, 0.95); backdrop-filter: blur(16px); display: flex; align-items: center; justify-content: center; z-index: 2000; }
       .auth-overlay.hidden { display: none !important; }
-      .auth-card { background: var(--bg-surface); border: 1px solid var(--border-color); width: 400px; max-width: 90%; border-radius: 20px; padding: 32px; display: flex; flex-direction: column; gap: 20px; }
-      .auth-title { font-size: 1.6rem; font-weight: 700; text-align: center; color: var(--primary); }
-      .auth-form { display: flex; flex-direction: column; gap: 16px; }
+      .auth-card { background: var(--bg-surface); border: 1px solid var(--border-color); width: 400px; max-width: 90%; border-radius: 20px; padding: 28px; display: flex; flex-direction: column; gap: 16px; }
+      .auth-title { font-size: 1.5rem; font-weight: 700; text-align: center; color: var(--primary); }
       .auth-field { display: flex; flex-direction: column; gap: 6px; }
-      .auth-label { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; }
-      .auth-input { background: var(--bg-deep); border: 1px solid var(--border-color); border-radius: 10px; padding: 12px; color: var(--text-main); outline: none; }
-      .auth-btn { background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end)); color: #fff; border: none; padding: 12px; border-radius: 10px; font-weight: 600; cursor: pointer; }
+      .auth-label { font-size: 0.75rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; }
+      .auth-input { background: var(--bg-deep); border: 1px solid var(--border-color); border-radius: 10px; padding: 10px 12px; color: var(--text-main); outline: none; font-size: 0.95rem; }
+      .auth-btn { background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end)); color: #fff; border: none; padding: 11px; border-radius: 10px; font-weight: 600; cursor: pointer; }
 
       .sidebar-backdrop { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 99; display: none; }
       .sidebar-backdrop.active { display: block; }
 
       @media (max-width: 768px) {
-        .mobile-menu-toggle { display: flex; align-items: center; justify-content: center; }
-        .sidebar { position: fixed; height: 100vh; transform: translateX(-100%); }
+        .sidebar { position: fixed; height: 100%; transform: translateX(-100%); }
         .sidebar.open { transform: translateX(0); }
       }
     </style>
   </head>
   <body>
-    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+    <div class="app-container">
+      <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
 
-    <aside class="sidebar" id="sidebar">
-      <div class="sidebar-top">Sol Ai</div>
-      <div class="sidebar-actions">
-        <button class="btn-new-chat">+ New chat</button>
-      </div>
-      <div class="recent-chats-container">
-        <div style="text-transform:uppercase; font-size:0.75rem; margin-bottom:8px;">History</div>
-        <div>No recent chats</div>
-      </div>
-      <div class="sidebar-footer">Copyright Aayush Dc</div>
-    </aside>
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-top">
+          <span>Sol Ai</span>
+        </div>
+        <div class="sidebar-actions">
+          <button class="btn-new-chat" id="newChatBtn">+ New chat</button>
+        </div>
+        <div class="recent-chats-container">
+          <div style="text-transform:uppercase; font-size:0.72rem; margin-bottom:8px;">History</div>
+          <div id="historyList">No recent chats</div>
+        </div>
+        <div class="sidebar-footer">Copyright Aayush Dc</div>
+      </aside>
 
-    <main class="main-content">
-      <header class="chat-header">
-        <button class="mobile-menu-toggle" id="mobileMenuBtn">&#9776;</button>
-        <div class="user-menu-container">
-          <div class="user-avatar-badge" id="userAvatarBadge">A</div>
-          <div class="user-dropdown-menu" id="userDropdown">
-            <button class="dropdown-item logout" id="logoutBtn">Logout</button>
+      <main class="main-content">
+        <header class="chat-header">
+          <button class="mobile-menu-toggle" id="mobileMenuBtn">&#9776;</button>
+          <div class="header-right">
+            <button class="api-key-btn" id="apiKeySettingsBtn">API Key</button>
+            <div class="user-menu-container">
+              <div class="user-avatar-badge" id="userAvatarBadge">A</div>
+              <div class="user-dropdown-menu" id="userDropdown">
+                <button class="dropdown-item logout" id="logoutBtn">Logout</button>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <div class="chat-messages-container" id="chatMessages">
+          <div class="message-wrapper assistant">
+            <div class="message-bubble">Hello! Set your Gemini API key using the button on the top right, then let's chat!</div>
           </div>
         </div>
-      </header>
 
-      <div class="chat-messages-container" id="chatMessages">
-        <div class="message-wrapper assistant">
-          <div class="message-bubble">Hello! How can I help you today?</div>
+        <div class="chat-input-wrapper">
+          <div class="chat-input-area">
+            <textarea class="chat-input" id="chatInput" placeholder="Message Sol Ai..." rows="1"></textarea>
+            <button class="send-btn" id="sendBtn">➤</button>
+          </div>
         </div>
-      </div>
+      </main>
+    </div>
 
-      <div class="chat-input-area">
-        <textarea class="chat-input" id="chatInput" placeholder="Message Sol Ai..." rows="1"></textarea>
-        <button class="send-btn" id="sendBtn">➤</button>
-      </div>
-    </main>
-
+    <!-- AUTH / CONFIG OVERLAY -->
     <div class="auth-overlay" id="authOverlay">
       <div class="auth-card">
-        <div class="auth-title">Welcome to Sol Ai</div>
-        <div class="auth-form">
+        <div class="auth-title" id="overlayTitle">Welcome to Sol Ai</div>
+        <div id="overlayDesc" style="font-size: 0.85rem; color: var(--text-muted); text-align: center;">Enter your Gemini API key to power real AI responses.</div>
+        <div style="display: flex; flex-direction: column; gap: 14px;">
           <div class="auth-field">
-            <label class="auth-label">Username / Email</label>
-            <input type="text" class="auth-input" id="authEmail" value="user@example.com" />
+            <label class="auth-label">Gemini API Key</label>
+            <input type="password" class="auth-input" id="apiKeyInput" placeholder="AIzaSy..." />
           </div>
-          <div class="auth-field">
-            <label class="auth-label">Password</label>
-            <input type="password" class="auth-input" id="authPassword" value="password" />
-          </div>
-          <button type="button" class="auth-btn" id="bypassAuthBtn">Continue</button>
+          <button type="button" class="auth-btn" id="saveKeyBtn">Start Chatting</button>
         </div>
       </div>
     </div>
 
     <script>
       const authOverlay = document.getElementById('authOverlay');
-      const bypassAuthBtn = document.getElementById('bypassAuthBtn');
+      const apiKeyInput = document.getElementById('apiKeyInput');
+      const saveKeyBtn = document.getElementById('saveKeyBtn');
+      const apiKeySettingsBtn = document.getElementById('apiKeySettingsBtn');
+      
       const logoutBtn = document.getElementById('logoutBtn');
       const userAvatarBadge = document.getElementById('userAvatarBadge');
       const userDropdown = document.getElementById('userDropdown');
@@ -140,14 +269,37 @@
       const chatInput = document.getElementById('chatInput');
       const sendBtn = document.getElementById('sendBtn');
       const chatMessages = document.getElementById('chatMessages');
+      const newChatBtn = document.getElementById('newChatBtn');
 
-      // Instantly hide login screen on click without validation traps
-      bypassAuthBtn.addEventListener('click', () => {
+      let geminiApiKey = localStorage.getItem('sol_gemini_api_key') || '';
+
+      // Check API key status on load
+      if (geminiApiKey) {
+        authOverlay.classList.add('hidden');
+      }
+
+      saveKeyBtn.addEventListener('click', () => {
+        const key = apiKeyInput.value.trim();
+        if (!key) {
+          alert('Please enter a valid API key.');
+          return;
+        }
+        geminiApiKey = key;
+        localStorage.setItem('sol_gemini_api_key', key);
         authOverlay.classList.add('hidden');
       });
 
-      // Bring back login screen on logout
+      apiKeySettingsBtn.addEventListener('click', () => {
+        apiKeyInput.value = geminiApiKey;
+        document.getElementById('overlayTitle').textContent = "API Configuration";
+        authOverlay.classList.remove('hidden');
+      });
+
       logoutBtn.addEventListener('click', () => {
+        localStorage.removeItem('sol_gemini_api_key');
+        geminiApiKey = '';
+        apiKeyInput.value = '';
+        document.getElementById('overlayTitle').textContent = "Welcome to Sol Ai";
         authOverlay.classList.remove('hidden');
         userDropdown.classList.remove('active');
       });
@@ -167,26 +319,83 @@
       mobileMenuBtn.addEventListener('click', toggleMenu);
       backdrop.addEventListener('click', toggleMenu);
 
-      // Chat functionality
-      function sendMessage() {
+      newChatBtn.addEventListener('click', () => {
+        chatMessages.innerHTML = `
+          <div class="message-wrapper assistant">
+            <div class="message-bubble">New chat started. How can I help you?</div>
+          </div>
+        `;
+        if (window.innerWidth <= 768) toggleMenu();
+      });
+
+      // Real Gemini API Connection
+      async function callGeminiAPI(promptText) {
+        // Loading indicator bubble
+        const loadingId = 'msg-' + Date.now();
+        chatMessages.innerHTML += `
+          <div class="message-wrapper assistant" id="${loadingId}">
+            <div class="message-bubble" style="opacity: 0.7;">Thinking...</div>
+          </div>
+        `;
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+        try {
+          const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiApiKey}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [{ parts: [{ text: promptText }] }]
+            })
+          });
+
+          const data = await response.json();
+          const loadingElement = document.getElementById(loadingId);
+          if (loadingElement) loadingElement.remove();
+
+          if (data.candidates && data.candidates[0].content.parts[0].text) {
+            const aiReply = data.candidates[0].content.parts[0].text;
+            appendMessage('assistant', aiReply);
+          } else {
+            appendMessage('assistant', 'Error: Invalid response from Gemini API check your API Key.');
+          }
+        } catch (error) {
+          const loadingElement = document.getElementById(loadingId);
+          if (loadingElement) loadingElement.remove();
+          appendMessage('assistant', 'Network error connecting to Gemini API.');
+        }
+      }
+
+      function appendMessage(sender, text) {
+        chatMessages.innerHTML += `
+          <div class="message-wrapper ${sender}">
+            <div class="message-bubble">${text.replace(/\n/g, '<br>')}</div>
+          </div>
+        `;
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }
+
+      function handleSendMessage() {
         const text = chatInput.value.trim();
         if (!text) return;
 
-        chatMessages.innerHTML += `<div class="message-wrapper user"><div class="message-bubble">${text}</div></div>`;
-        chatInput.value = '';
-        chatMessages.scrollTop = chatMessages.scrollHeight;
+        if (!geminiApiKey) {
+          alert('Please set your Gemini API key first.');
+          authOverlay.classList.remove('hidden');
+          return;
+        }
 
-        setTimeout(() => {
-          chatMessages.innerHTML += `<div class="message-wrapper assistant"><div class="message-bubble">I am running locally! How else can I assist you?</div></div>`;
-          chatMessages.scrollTop = chatMessages.scrollHeight;
-        }, 500);
+        appendMessage('user', text);
+        chatInput.value = '';
+        chatInput.style.height = 'auto';
+
+        callGeminiAPI(text);
       }
 
-      sendBtn.addEventListener('click', sendMessage);
+      sendBtn.addEventListener('click', handleSendMessage);
       chatInput.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' && !e.shiftKey) {
           e.preventDefault();
-          sendMessage();
+          handleSendMessage();
         }
       });
     </script>
