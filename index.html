@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sol AI</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Inter', sans-serif;
+            font-family: 'Plus Jakarta Sans', sans-serif;
         }
 
         body {
@@ -111,6 +111,35 @@
             flex-direction: column;
             gap: 20px;
             scroll-behavior: smooth;
+            position: relative;
+        }
+
+        /* Claude/Gemini Style Welcome Screen */
+        .welcome-screen {
+            position: absolute;
+            top: 45%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            width: 100%;
+            max-width: 600px;
+            padding: 0 20px;
+            transition: opacity 0.3s ease;
+        }
+
+        .welcome-screen h1 {
+            font-size: 2.75rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 50%, #ffffff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
+        }
+
+        .welcome-screen p {
+            color: #8e918f;
+            font-size: 1.1rem;
         }
 
         .message {
@@ -271,7 +300,11 @@
         </div>
 
         <div class="chat-history" id="chatHistory">
-            <!-- Chat history starts completely clean with no initial message -->
+            <!-- Gemini/Claude Aesthetic Welcome Banner -->
+            <div class="welcome-screen" id="welcomeScreen">
+                <h1>Ask whatever in your mind</h1>
+                <p>Explore ideas, write code, or create with Sol AI</p>
+            </div>
         </div>
 
         <div class="input-container">
@@ -344,13 +377,20 @@
         }
         animatePetals();
 
-        // Chat Logic
+        // Chat Logic with Absolute Domain Route Fix
         async function askAI() {
             const inputField = document.getElementById('userInput');
             const prompt = inputField.value.trim();
             if (!prompt) return;
 
             const chatHistory = document.getElementById('chatHistory');
+            const welcomeScreen = document.getElementById('welcomeScreen');
+
+            // Hide welcome screen smoothly on first prompt
+            if (welcomeScreen) {
+                welcomeScreen.style.opacity = '0';
+                setTimeout(() => welcomeScreen.remove(), 300);
+            }
 
             // Append User Message
             chatHistory.innerHTML += `
@@ -377,7 +417,8 @@
             chatHistory.scrollTop = chatHistory.scrollHeight;
 
             try {
-                const response = await fetch('/api/chat', {
+                // Fixed using window.location.origin to support custom domain routing seamlessly
+                const response = await fetch(window.location.origin + '/api/chat', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ prompt })
