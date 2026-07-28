@@ -48,7 +48,7 @@
             font-size: 1.1rem;
             font-weight: 600;
             color: #f1f3f4;
-            margin-bottom: 24px;
+            margin-bottom: 16px;
             display: flex;
             align-items: center;
             gap: 10px;
@@ -70,10 +70,50 @@
             font-size: 0.9rem;
             text-align: left;
             transition: background 0.2s;
+            margin-bottom: 20px;
         }
 
         .new-chat-btn:hover {
             background: #333538;
+        }
+
+        .history-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #8e918f;
+            margin-bottom: 8px;
+            padding-left: 4px;
+        }
+
+        .history-list {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .history-item {
+            padding: 10px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            color: #c4c7c5;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            transition: background 0.2s;
+        }
+
+        .history-item:hover {
+            background: #282a2c;
+            color: #f1f3f4;
+        }
+
+        .history-item.active {
+            background: #2b2c2f;
+            color: #ff7eb3;
         }
 
         /* Main Chat Area */
@@ -114,7 +154,7 @@
             position: relative;
         }
 
-        /* Claude/Gemini Style Welcome Screen */
+        /* Welcome Screen */
         .welcome-screen {
             position: absolute;
             top: 45%;
@@ -290,7 +330,11 @@
         <div class="sidebar-brand">
             🌸 <span>Sol AI</span>
         </div>
-        <button class="new-chat-btn" onclick="location.reload()">+ New chat</button>
+        <button class="new-chat-btn" onclick="startNewChat()">+ New chat</button>
+        <div class="history-title">Recent Chats</div>
+        <div class="history-list" id="historyList">
+            <!-- Dynamically loaded chat history sessions -->
+        </div>
     </div>
 
     <!-- Main Chat Content -->
@@ -300,7 +344,6 @@
         </div>
 
         <div class="chat-history" id="chatHistory">
-            <!-- Gemini/Claude Aesthetic Welcome Banner -->
             <div class="welcome-screen" id="welcomeScreen">
                 <h1>Ask whatever in your mind</h1>
                 <p>Explore ideas, write code, or create with Sol AI</p>
@@ -318,7 +361,7 @@
     </div>
 
     <script>
-        // Flower / Petal Falling Animation Script
+        // Flower Petal Rain Animation
         const canvas = document.getElementById('flower-canvas');
         const ctx = canvas.getContext('2d');
 
@@ -366,7 +409,6 @@
         }
 
         const petalsArray = Array.from({ length: 25 }, () => new Petal());
-
         function animatePetals() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             petalsArray.forEach(petal => {
@@ -377,7 +419,67 @@
         }
         animatePetals();
 
-        // Chat Logic with Absolute Domain Route Fix
+        // Multi-Session Chat State & LocalStorage Management
+        let chats = JSON.parse(localStorage.getItem('sol_ai_chats')) || [];
+        let currentChatId = null;
+
+        function saveChats() {
+            localStorage.setItem('sol_ai_chats', JSON.stringify(chats));
+        }
+
+        function renderHistoryList() {
+            const historyList = document.getElementById('historyList');
+            historyList.innerHTML = '';
+            chats.forEach(chat => {
+                const item = document.createElement('div');
+                item.className = `history-item ${chat.id === currentChatId ? 'active' : ''}`;
+                item.innerText = chat.title;
+                item.onclick = () => loadChat(chat.id);
+                historyList.appendChild(item);
+            });
+        }
+
+        function startNewChat() {
+            currentChatId = null;
+            document.getElementById('chatHistory').innerHTML = `
+                <div class="welcome-screen" id="welcomeScreen">
+                    <h1>Ask whatever in your mind</h1>
+                    <p>Explore ideas, write code, or create with Sol AI</p>
+                </div>
+            `;
+            renderHistoryList();
+        }
+
+        function loadChat(id) {
+            currentChatId = id;
+            const chat = chats.find(c => c.id === id);
+            const chatHistory = document.getElementById('chatHistory');
+            
+            if (!chat) return;
+
+            let html = '';
+            chat.messages.forEach(msg => {
+                if (msg.role === 'user') {
+                    html += `
+                        <div class="message user">
+                            <div class="avatar">U</div>
+                            <div class="bubble">${escapeHTML(msg.content)}</div>
+                        </div>
+                    `;
+                } else {
+                    html += `
+                        <div class="message ai">
+                            <div class="avatar">S</div>
+                            <div class="bubble">${formatAIResponse(msg.content)}</div>
+                        </div>
+                    `;
+                }
+            });
+            chatHistory.innerHTML = html;
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+            renderHistoryList();
+        }
+
         async function askAI() {
             const inputField = document.getElementById('userInput');
             const prompt = inputField.value.trim();
@@ -386,19 +488,34 @@
             const chatHistory = document.getElementById('chatHistory');
             const welcomeScreen = document.getElementById('welcomeScreen');
 
-            // Hide welcome screen smoothly on first prompt
             if (welcomeScreen) {
                 welcomeScreen.style.opacity = '0';
                 setTimeout(() => welcomeScreen.remove(), 300);
             }
 
-            // Append User Message
+            // If no active chat session, create a new one
+            if (!currentChatId) {
+                currentChatId = 'chat_' + Date.now();
+                chats.unshift({
+                    id: currentChatId,
+                    title: prompt.length > 25 ? prompt.substring(0, 25) + '...' : prompt,
+                    messages: []
+                });
+            }
+
+            // Append User Message to UI & active chat object
             chatHistory.innerHTML += `
                 <div class="message user">
                     <div class="avatar">U</div>
                     <div class="bubble">${escapeHTML(prompt)}</div>
                 </div>
             `;
+            
+            const activeChat = chats.find(c => c.id === currentChatId);
+            activeChat.messages.push({ role: 'user', content: prompt });
+            saveChats();
+            renderHistoryList();
+
             inputField.value = '';
             chatHistory.scrollTop = chatHistory.scrollHeight;
 
@@ -417,7 +534,6 @@
             chatHistory.scrollTop = chatHistory.scrollHeight;
 
             try {
-                // Fixed using window.location.origin to support custom domain routing seamlessly
                 const response = await fetch(window.location.origin + '/api/chat', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -425,8 +541,14 @@
                 });
 
                 const data = await response.json();
+                const replyText = data.reply || "No response received.";
+                
                 const aiBubble = document.querySelector(`#${loadingId} .bubble`);
-                aiBubble.innerHTML = formatAIResponse(data.reply || "No response received.");
+                aiBubble.innerHTML = formatAIResponse(replyText);
+
+                // Save AI response to session storage
+                activeChat.messages.push({ role: 'ai', content: replyText });
+                saveChats();
             } catch (err) {
                 const aiBubble = document.querySelector(`#${loadingId} .bubble`);
                 aiBubble.innerText = "Error connecting to Sol AI backend.";
@@ -450,6 +572,9 @@
         function formatAIResponse(text) {
             return escapeHTML(text).replace(/\n/g, '<br>');
         }
+
+        // Initialize sidebar on page load
+        renderHistoryList();
     </script>
 </body>
 </html>
