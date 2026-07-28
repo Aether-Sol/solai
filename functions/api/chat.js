@@ -1,20 +1,37 @@
-export default async function handler(req, res) {
-    if (req.method !== 'POST') return res.status(405).send('Method Not Allowed');
+export async function onRequestPost(context) {
+    try {
+        const secretKey = context.env.MY_SECRET_API_KEY;
+        const requestData = await context.request.json();
+        const userPrompt = requestData.prompt;
+        
+        const aiResponse = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${secretKey}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                model: "llama-3.3-70b-versatile",
+                messages: [{ role: "user", content: userPrompt }]
+            })
+        });
 
-    const userPrompt = req.body.prompt;
-    
-    // Process the request using your secret API key
-    const aiResponse = await fetch('URL_OF_YOUR_CHOSEN_AI_API', {
-        method: 'POST',
-        headers: {
-            'Authorization': `Bearer ${process.env.MY_SECRET_API_KEY}`,
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ /* payload required by your chosen AI */ })
-    });
+        const data = await aiResponse.json();
+        
+        if (!aiResponse.ok) {
+            return new Response(JSON.stringify({ reply: "API Error: " + (data.error?.message || "Unknown error") }), {
+                headers: { 'Content-Type': 'application/json' }
+            });
+        }
 
-    const data = await aiResponse.json();
-    
-    // Send the AI's response back to your frontend
-    res.status(200).json({ reply: data.choices[0].message.content }); 
+        const replyText = data.choices[0].message.content;
+        
+        return new Response(JSON.stringify({ reply: replyText }), {
+            headers: { 'Content-Type': 'application/json' }
+        });
+    } catch (err) {
+        return new Response(JSON.stringify({ reply: "Server Error: " + err.message }), {
+            headers: { 'Content-Type': 'application/json' }
+        });
+    }
 }
