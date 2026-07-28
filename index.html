@@ -131,7 +131,6 @@
       .message-wrapper.user .message-bubble { background: var(--msg-user); color: #fff; border-bottom-right-radius: 4px; }
       .message-wrapper.assistant .message-bubble { background: var(--bg-surface); border: 1px solid var(--border-color); color: var(--text-main); border-bottom-left-radius: 4px; }
 
-      /* Optimized bottom typing wrapper to prevent keyboard layout cutoffs */
       .chat-input-wrapper {
         padding: 8px 12px calc(8px + env(safe-area-inset-bottom, 0px)) 12px;
         background: var(--bg-surface);
@@ -261,14 +260,14 @@
       </main>
     </div>
 
-    <!-- AUTH / CONFIG OVERLAY WITH OFFICIAL WEBSITE LINK -->
+    <!-- AUTH OVERLAY -->
     <div class="auth-overlay" id="authOverlay">
       <div class="auth-card">
         <div class="auth-title" id="overlayTitle">Welcome to Sol Ai</div>
         <div id="overlayDesc" style="font-size: 0.82rem; color: var(--text-muted); text-align: center;">Enter your xAI Grok API key to connect.</div>
         
         <div class="api-link-box">
-          Don't have a key? Get one from the official website:<br>
+          Get your key from the official xAI console:<br>
           <a href="https://console.x.ai/" target="_blank" rel="noopener noreferrer">console.x.ai</a>
         </div>
 
@@ -372,7 +371,7 @@
               'Authorization': `Bearer ${grokApiKey}`
             },
             body: JSON.stringify({
-              model: 'grok-beta',
+              model: 'grok-2-latest',
               messages: [
                 { role: 'system', content: 'You are Sol Ai, a helpful assistant.' },
                 { role: 'user', content: promptText }
@@ -388,14 +387,14 @@
             const aiReply = data.choices[0].message.content;
             appendMessage('assistant', aiReply);
           } else if (data.error) {
-            appendMessage('assistant', `API Error: ${data.error.message || 'Check your Grok API Key.'}`);
+            appendMessage('assistant', `API Error: ${data.error.message}`);
           } else {
-            appendMessage('assistant', 'Error: Invalid response structure from Grok API.');
+            appendMessage('assistant', 'Error: Unexpected response format from xAI API.');
           }
         } catch (error) {
           const loadingElement = document.getElementById(loadingId);
           if (loadingElement) loadingElement.remove();
-          appendMessage('assistant', 'Network error connecting to Grok API.');
+          appendMessage('assistant', 'Network error connecting to xAI API.');
         }
       }
 
