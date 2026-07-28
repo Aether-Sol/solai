@@ -221,10 +221,12 @@
             body: JSON.stringify({ 
               model: 'qwen/qwen3.6-27b', 
               messages: [
-                { role: 'system', content: 'You are Sol Ai, a helpful assistant. Provide ONLY the direct final response to the user. Speak directly using "you" and never use the third person. Do NOT output any internal thinking process or reasoning steps.' }, 
+                { role: 'system', content: 'You are Sol Ai, a direct and helpful assistant. Provide ONLY the final answer directly to the user using "you". Do not include any thinking process, reasoning steps, or third-person commentary.' }, 
                 ...conversationHistory
               ], 
-              max_completion_tokens: 1024 
+              max_completion_tokens: 1024,
+              reasoning_format: 'hidden',
+              reasoning_effort: 'none'
             }),
             signal: currentAbortController.signal
           });
@@ -232,7 +234,10 @@
           document.getElementById(loadingId)?.remove();
           stopBtn.classList.remove('active');
           if (data.choices && data.choices[0].message) {
-            const aiReply = data.choices[0].message.content;
+            let aiReply = data.choices[0].message.content;
+            if (aiReply.includes('<think>')) {
+              aiReply = aiReply.replace(/<think>[\s\S]*?<\/think>/g, '').trim();
+            }
             conversationHistory.push({ role: 'assistant', content: aiReply });
             appendMessageUI('assistant', aiReply);
             saveCurrentChatToHistory();
