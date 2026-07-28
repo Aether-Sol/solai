@@ -1,8 +1,15 @@
 export async function onRequestPost(context) {
     try {
         const secretKey = context.env.MY_SECRET_API_KEY;
-        const requestData = await context.request.json();
+        const requestData = await context.request.json().catch(() => ({}));
         const userPrompt = requestData.prompt;
+        
+        // Check if the prompt was actually sent from the frontend
+        if (!userPrompt) {
+            return new Response(JSON.stringify({ reply: "API Error: Prompt is missing or empty." }), {
+                headers: { 'Content-Type': 'application/json' }
+            });
+        }
         
         const aiResponse = await fetch('https://api.groq.com/openai/v1/chat/completions', {
             method: 'POST',
