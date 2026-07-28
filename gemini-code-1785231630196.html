@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Personal AI</title>
+</head>
+<body>
+    <h1>Ask my AI a question</h1>
+    <input type="text" id="userInput" placeholder="Type here...">
+    <button onclick="askAI()">Ask</button>
+    <p id="response"></p>
+
+    <script>
+        async function askAI() {
+            const input = document.getElementById('userInput').value;
+            document.getElementById('response').innerText = "Thinking...";
+            
+            // We call our OWN secure backend API, not the AI directly
+            const response = await fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ prompt: input })
+            });
+            
+            const data = await response.json();
+            document.getElementById('response').innerText = data.reply;
+        }
+    </script>
+</body>
+</html>
