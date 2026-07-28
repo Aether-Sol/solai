@@ -19,7 +19,13 @@ export async function onRequestPost(context) {
             },
             body: JSON.stringify({
                 model: "llama-3.3-70b-versatile",
-                messages: [{ role: "user", content: userPrompt }]
+                messages: [
+                    { 
+                        role: "system", 
+                        content: "You are a helpful assistant. STRICT FORMATTING RULES: 1. Never use markdown asterisks or bold syntax (like **). 2. Never write long continuous paragraphs. 3. Always format your answers line-by-line using clear bullet points (•) with line breaks so it is easy to read and listen to." 
+                    },
+                    { role: "user", content: userPrompt }
+                ]
             })
         });
 
