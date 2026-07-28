@@ -143,7 +143,6 @@
       .message-bubble pre code { background: transparent; padding: 0; }
       .message-bubble ul, .message-bubble ol { margin-left: 20px; margin-bottom: 8px; }
       
-      /* Image inside chat bubbles */
       .chat-img-preview { max-width: 200px; max-height: 200px; border-radius: 8px; margin-bottom: 8px; display: block; object-fit: cover; }
 
       .msg-footer { display: flex; align-items: center; gap: 6px; padding: 0 4px; }
@@ -190,7 +189,6 @@
       .stop-btn.active { display: flex; }
       .stop-btn:hover { background: rgba(239, 68, 68, 0.3); }
 
-      /* Attached image indicator preview area above textarea */
       .selected-image-preview-container {
         display: none;
         align-items: center;
@@ -310,7 +308,6 @@
             <button class="stop-btn" id="stopBtn">⏹ Stop Generating</button>
           </div>
           
-          <!-- Image selection preview wrapper -->
           <div class="selected-image-preview-container" id="imagePreviewContainer">
             <img id="selectedThumb" class="selected-thumb" src="" alt="attachment" />
             <span style="font-size: 0.8rem; color: var(--text-muted);">Image attached</span>
@@ -351,7 +348,6 @@
       let currentAbortController = null;
       let attachedBase64Image = null;
 
-      // Handle image file selection
       attachBtn.addEventListener('click', () => imageInput.click());
 
       imageInput.addEventListener('change', (e) => {
@@ -446,7 +442,6 @@
         conversationHistory = [...chat.messages];
         chatMessages.innerHTML = '';
         conversationHistory.forEach(msg => {
-          // Render content safely handling text vs multimodal content array
           let displayContent = msg.content;
           let displayImage = null;
           if (Array.isArray(msg.content)) {
@@ -519,8 +514,7 @@
           if (imageUrl) {
             userMessageContent = [
               { type: "text", text: promptText || "What is this image?" },
-              { type: "image_url", image_url: { url
-    imageUrl } }
+              { type: "image_url", image_url: { url: imageUrl } }
             ];
           } else {
             userMessageContent = promptText;
@@ -528,14 +522,14 @@
 
           conversationHistory.push({ role: 'user', content: userMessageContent });
 
-          const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+          const response = await fetch('https://api.groq.com/openai/v1/chat/const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
               'Authorization': `Bearer ${GROQ_API_KEY}`
             },
             body: JSON.stringify({
-              model: 'qwen/qwen2.5-vl-7b-instruct',
+              model: 'qwen/qwen3.6-27b',
               messages: [
                 { role: 'system', content: 'You are Sol Ai, a helpful assistant with vision capabilities.' },
                 ...conversationHistory
