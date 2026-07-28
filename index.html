@@ -115,7 +115,6 @@
         position: relative;
       }
 
-      /* Neon Sol AI Style */
       .neon-title {
         font-size: 1.2rem;
         font-weight: 800;
@@ -139,11 +138,37 @@
         -webkit-overflow-scrolling: touch;
       }
       
-      .message-wrapper { display: flex; max-width: 800px; width: 100%; margin: 0 auto; }
-      .message-wrapper.user { justify-content: flex-end; }
+      .message-wrapper { display: flex; flex-direction: column; max-width: 800px; width: 100%; margin: 0 auto; gap: 4px; }
+      .message-wrapper.user { align-items: flex-end; }
+      .message-wrapper.assistant { align-items: flex-start; }
+      
       .message-bubble { padding: 11px 15px; border-radius: 14px; font-size: 0.9rem; line-height: 1.45; word-break: break-word; }
       .message-wrapper.user .message-bubble { background: var(--msg-user); color: #fff; border-bottom-right-radius: 4px; }
       .message-wrapper.assistant .message-bubble { background: var(--bg-surface); border: 1px solid var(--border-color); color: var(--text-main); border-bottom-left-radius: 4px; }
+
+      .msg-footer {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 0 4px;
+      }
+
+      .tts-btn {
+        background: transparent;
+        border: 1px solid var(--border-color);
+        color: var(--text-muted);
+        padding: 3px 8px;
+        border-radius: 6px;
+        font-size: 0.75rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .tts-btn:hover {
+        background: rgba(255,255,255,0.05);
+        color: var(--text-main);
+      }
 
       .chat-input-wrapper {
         padding: 8px 12px calc(8px + env(safe-area-inset-bottom, 0px)) 12px;
@@ -233,6 +258,9 @@
         <div class="chat-messages-container" id="chatMessages">
           <div class="message-wrapper assistant">
             <div class="message-bubble">Hello! I am Sol AI. How can I help you today?</div>
+            <div class="msg-footer">
+              <button class="tts-btn" onclick="speakText(this, 'Hello! I am Sol AI. How can I help you today?')">🔊 Listen</button>
+            </div>
           </div>
         </div>
 
@@ -261,6 +289,62 @@
       let conversationHistory = [];
       let savedConversations = JSON.parse(localStorage.getItem('sol_chat_history') || '[]');
 
+      // Optimized High-Quality Web Speech Integration
+      function speakText(buttonElement, text) {
+        if (!('speechSynthesis' in window)) {
+          alert("Text-to-speech is not supported on this browser/device.");
+          return;
+        }
+
+        // Stop any ongoing speech
+        window.speechSynthesis.cancel();
+
+        if (buttonElement.classList.contains('speaking')) {
+          buttonElement.classList.remove('speaking');
+          buttonElement.innerHTML = '🔊 Listen';
+          return;
+        }
+
+        // Reset other buttons
+        document.querySelectorAll('.tts-btn').forEach(btn => {
+          btn.classList.remove('speaking');
+          btn.innerHTML = '🔊 Listen';
+        });
+
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.rate = 1.0; // Normal speed
+        utterance.pitch = 1.0;
+
+        // Automatically select the best available natural/online voice package
+        const voices = window.speechSynthesis.getVoices();
+        const preferredVoice = voices.find(v => v.lang.includes('en') && (v.name.includes('Natural') || v.name.includes('Google') || v.name.includes('Online') || v.name.includes('Microsoft'))) || voices[0];
+        if (preferredVoice) {
+          utterance.voice = preferredVoice;
+        }
+
+        buttonElement.classList.add('speaking');
+        buttonElement.innerHTML = '⏹ Stop';
+
+        utterance.onend = () => {
+          buttonElement.classList.remove('speaking');
+          buttonElement.innerHTML = '🔊 Listen';
+        };
+
+        utterance.onerror = () => {
+          buttonElement.classList.remove('speaking');
+          buttonElement.innerHTML = '🔊 Listen';
+        };
+
+        window.speechSynthesis.speak(utterance);
+      }
+
+      // Preload voices for mobile webviews
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.onvoiceschanged = () => {
+          window.speechSynthesis.getVoices();
+        };
+      }
+
       function renderHistory() {
         if (savedConversations.length === 0) {
           historyList.innerHTML = `<div style="color: var(--text-muted); font-size: 0.8rem;">No recent chats</div>`;
@@ -280,6 +364,7 @@
       }
 
       function loadChat(index) {
+        window.speechSynthesis.cancel();
         const chat = savedConversations[index];
         conversationHistory = [...chat.messages];
         chatMessages.innerHTML = '';
@@ -296,6 +381,7 @@
       backdrop.addEventListener('click', toggleMenu);
 
       newChatBtn.addEventListener('click', () => {
+        window.speechSynthesis.cancel();
         if (conversationHistory.length > 0) {
           saveCurrentChatToHistory();
         }
@@ -303,6 +389,9 @@
         chatMessages.innerHTML = `
           <div class="message-wrapper assistant">
             <div class="message-bubble">New chat started. How can I help you?</div>
+            <div class="msg-footer">
+              <button class="tts-btn" onclick="speakText(this, 'New chat started. How can I help you?')">🔊 Listen</button>
+            </div>
           </div>
         `;
         if (window.innerWidth <= 768) toggleMenu();
@@ -367,9 +456,21 @@
       }
 
       function appendMessageUI(sender, text) {
+        let footerHtml = '';
+        if (sender === 'assistant') {
+          // Escape quotes safely for inline JS click function
+          const safeText = text.replace(/'/g, "\\'").replace(/"/g, '&quot;').replace(/\n/g, ' ');
+          footerHtml = `
+            <div class="msg-footer">
+              <button class="tts-btn" onclick="speakText(this, '${safeText}')">🔊 Listen</button>
+            </div>
+          `;
+        }
+
         chatMessages.innerHTML += `
           <div class="message-wrapper ${sender}">
             <div class="message-bubble">${text.replace(/\n/g, '<br>')}</div>
+            ${footerHtml}
           </div>
         `;
         chatMessages.scrollTop = chatMessages.scrollHeight;
