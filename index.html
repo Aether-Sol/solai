@@ -1,10 +1,11 @@
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
     <title>Sol AI - Groq Edition</title>
+    <!-- Marked.js for Markdown parsing -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
       :root {
         --bg-deep: #121212;
@@ -142,9 +143,16 @@
       .message-wrapper.user { align-items: flex-end; }
       .message-wrapper.assistant { align-items: flex-start; }
       
-      .message-bubble { padding: 11px 15px; border-radius: 14px; font-size: 0.9rem; line-height: 1.45; word-break: break-word; }
+      .message-bubble { padding: 11px 15px; border-radius: 14px; font-size: 0.9rem; line-height: 1.5; word-break: break-word; width: 100%; }
       .message-wrapper.user .message-bubble { background: var(--msg-user); color: #fff; border-bottom-right-radius: 4px; }
       .message-wrapper.assistant .message-bubble { background: var(--bg-surface); border: 1px solid var(--border-color); color: var(--text-main); border-bottom-left-radius: 4px; }
+
+      .message-bubble p { margin-bottom: 8px; }
+      .message-bubble p:last-child { margin-bottom: 0; }
+      .message-bubble pre { background: #0a0a0a; border: 1px solid var(--border-color); padding: 10px; border-radius: 8px; overflow-x: auto; margin: 8px 0; }
+      .message-bubble code { font-family: monospace; background: rgba(255,255,255,0.1); padding: 2px 4px; border-radius: 4px; font-size: 0.85rem; }
+      .message-bubble pre code { background: transparent; padding: 0; }
+      .message-bubble ul, .message-bubble ol { margin-left: 20px; margin-bottom: 8px; }
 
       .msg-footer {
         display: flex;
@@ -175,7 +183,34 @@
         background: var(--bg-surface);
         border-top: 1px solid var(--border-color);
         flex-shrink: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
       }
+
+      .stop-gen-container {
+        display: flex;
+        justify-content: center;
+        max-width: 900px;
+        width: 100%;
+        margin: 0 auto;
+      }
+
+      .stop-btn {
+        background: rgba(239, 68, 68, 0.2);
+        border: 1px solid rgba(239, 68, 68, 0.5);
+        color: #f87171;
+        padding: 6px 14px;
+        border-radius: 8px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        cursor: pointer;
+        display: none;
+        align-items: center;
+        gap: 6px;
+      }
+      .stop-btn.active { display: flex; }
+      .stop-btn:hover { background: rgba(239, 68, 68, 0.3); }
 
       .chat-input-area { 
         display: flex; 
@@ -257,7 +292,7 @@
 
         <div class="chat-messages-container" id="chatMessages">
           <div class="message-wrapper assistant">
-            <div class="message-bubble">Hello! I am Sol AI. How can I help you today?</div>
+            <div class="message-bubble"><p>Hello! I am Sol AI. How can I help you today?</p></div>
             <div class="msg-footer">
               <button class="tts-btn" onclick="speakText(this, 'Hello! I am Sol AI. How can I help you today?')">🔊 Listen</button>
             </div>
@@ -265,6 +300,9 @@
         </div>
 
         <div class="chat-input-wrapper">
+          <div class="stop-gen-container">
+            <button class="stop-btn" id="stopBtn">⏹ Stop Generating</button>
+          </div>
           <div class="chat-input-area">
             <textarea class="chat-input" id="chatInput" placeholder="Message Sol Ai..." rows="1"></textarea>
             <button class="send-btn" id="sendBtn">➤</button>
@@ -282,21 +320,21 @@
 
       const chatInput = document.getElementById('chatInput');
       const sendBtn = document.getElementById('sendBtn');
+      const stopBtn = document.getElementById('stopBtn');
       const chatMessages = document.getElementById('chatMessages');
       const newChatBtn = document.getElementById('newChatBtn');
       const historyList = document.getElementById('historyList');
 
       let conversationHistory = [];
       let savedConversations = JSON.parse(localStorage.getItem('sol_chat_history') || '[]');
+      let currentAbortController = null;
 
-      // Optimized High-Quality Web Speech Integration
       function speakText(buttonElement, text) {
         if (!('speechSynthesis' in window)) {
           alert("Text-to-speech is not supported on this browser/device.");
           return;
         }
 
-        // Stop any ongoing speech
         window.speechSynthesis.cancel();
 
         if (buttonElement.classList.contains('speaking')) {
@@ -305,17 +343,15 @@
           return;
         }
 
-        // Reset other buttons
         document.querySelectorAll('.tts-btn').forEach(btn => {
           btn.classList.remove('speaking');
           btn.innerHTML = '🔊 Listen';
         });
 
         const utterance = new SpeechSynthesisUtterance(text);
-        utterance.rate = 1.0; // Normal speed
+        utterance.rate = 1.0;
         utterance.pitch = 1.0;
 
-        // Automatically select the best available natural/online voice package
         const voices = window.speechSynthesis.getVoices();
         const preferredVoice = voices.find(v => v.lang.includes('en') && (v.name.includes('Natural') || v.name.includes('Google') || v.name.includes('Online') || v.name.includes('Microsoft'))) || voices[0];
         if (preferredVoice) {
@@ -338,7 +374,6 @@
         window.speechSynthesis.speak(utterance);
       }
 
-      // Preload voices for mobile webviews
       if ('speechSynthesis' in window) {
         window.speechSynthesis.onvoiceschanged = () => {
           window.speechSynthesis.getVoices();
@@ -365,6 +400,9 @@
 
       function loadChat(index) {
         window.speechSynthesis.cancel();
+        if (currentAbortController) currentAbortController.abort();
+        stopBtn.classList.remove('active');
+
         const chat = savedConversations[index];
         conversationHistory = [...chat.messages];
         chatMessages.innerHTML = '';
@@ -382,13 +420,16 @@
 
       newChatBtn.addEventListener('click', () => {
         window.speechSynthesis.cancel();
+        if (currentAbortController) currentAbortController.abort();
+        stopBtn.classList.remove('active');
+
         if (conversationHistory.length > 0) {
           saveCurrentChatToHistory();
         }
         conversationHistory = [];
         chatMessages.innerHTML = `
           <div class="message-wrapper assistant">
-            <div class="message-bubble">New chat started. How can I help you?</div>
+            <div class="message-bubble"><p>New chat started. How can I help you?</p></div>
             <div class="msg-footer">
               <button class="tts-btn" onclick="speakText(this, 'New chat started. How can I help you?')">🔊 Listen</button>
             </div>
@@ -415,6 +456,9 @@
           </div>
         `;
         chatMessages.scrollTop = chatMessages.scrollHeight;
+        stopBtn.classList.add('active');
+
+        currentAbortController = new AbortController();
 
         try {
           conversationHistory.push({ role: 'user', content: promptText });
@@ -431,12 +475,14 @@
                 { role: 'system', content: 'You are Sol Ai, a helpful assistant.' },
                 ...conversationHistory
               ]
-            })
+            }),
+            signal: currentAbortController.signal
           });
 
           const data = await response.json();
           const loadingElement = document.getElementById(loadingId);
           if (loadingElement) loadingElement.remove();
+          stopBtn.classList.remove('active');
 
           if (data.choices && data.choices[0].message && data.choices[0].message.content) {
             const aiReply = data.choices[0].message.content;
@@ -451,29 +497,56 @@
         } catch (error) {
           const loadingElement = document.getElementById(loadingId);
           if (loadingElement) loadingElement.remove();
-          appendMessageUI('assistant', 'Network error connecting to GroqCloud API.');
+          stopBtn.classList.remove('active');
+
+          if (error.name === 'AbortError') {
+            appendMessageUI('assistant', '_Generation stopped._');
+            conversationHistory.push({ role: 'assistant', content: 'Generation stopped.' });
+          } else {
+            appendMessageUI('assistant', 'Network error connecting to GroqCloud API.');
+          }
         }
       }
 
+      stopBtn.addEventListener('click', () => {
+        if (currentAbortController) {
+          currentAbortController.abort();
+        }
+      });
+
       function appendMessageUI(sender, text) {
         let footerHtml = '';
-        if (sender === 'assistant') {
-          // Escape quotes safely for inline JS click function
-          const safeText = text.replace(/'/g, "\\'").replace(/"/g, '&quot;').replace(/\n/g, ' ');
+        let formattedContent = '';
+
+        if (sender === 'user') {
+          formattedContent = `<p>${text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, '<br>')}</p>`;
+        } else {
+          formattedContent = marked.parse(text);
+          const tempDiv = document.createElement('div');
+          tempDiv.innerHTML = formattedContent;
+          const plainTextForSpeech = tempDiv.textContent || tempDiv.innerText || '';
+          
+          const encodedSpeechText = btoa(unescape(encodeURIComponent(plainTextForSpeech)));
+
           footerHtml = `
             <div class="msg-footer">
-              <button class="tts-btn" onclick="speakText(this, '${safeText}')">🔊 Listen</button>
+              <button class="tts-btn" onclick="speakEncodedText(this, '${encodedSpeechText}')">🔊 Listen</button>
             </div>
           `;
         }
 
         chatMessages.innerHTML += `
           <div class="message-wrapper ${sender}">
-            <div class="message-bubble">${text.replace(/\n/g, '<br>')}</div>
+            <div class="message-bubble">${formattedContent}</div>
             ${footerHtml}
           </div>
         `;
         chatMessages.scrollTop = chatMessages.scrollHeight;
+      }
+
+      function speakEncodedText(buttonElement, base64Text) {
+        const decodedText = decodeURIComponent(escape(atob(base64Text)));
+        speakText(buttonElement, decodedText);
       }
 
       function handleSendMessage() {
@@ -484,18 +557,18 @@
         chatInput.value = '';
         chatInput.style.height = 'auto';
 
-        callGroqCloudAPI(text);
+              callGroqCloudAPI(text);
+    }
+
+    sendBtn.addEventListener('click', handleSendMessage);
+    chatInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        handleSendMessage();
       }
+    });
 
-      sendBtn.addEventListener('click', handleSendMessage);
-      chatInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' && !e.shiftKey) {
-          e.preventDefault();
-          handleSendMessage();
-        }
-      });
-
-      renderHistory();
-    </script>
-  </body>
+    renderHistory();
+  </script>
+</body>
 </html>
