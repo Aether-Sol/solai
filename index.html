@@ -45,7 +45,14 @@
       .btn-new-chat, .btn-settings { background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end)); color: #fff; border: none; padding: 10px; border-radius: 10px; width: 100%; font-weight: 600; cursor: pointer; font-size: 0.85rem; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3); text-align: center; }
       .btn-settings { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-color); color: var(--text-main); }
       .recent-chats-container { flex: 1; padding: 0 16px; color: var(--text-muted); font-size: 0.85rem; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; }
-      .history-item { background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-color); padding: 8px 10px; border-radius: 8px; color: var(--text-main); font-size: 0.8rem; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      
+      .history-item { background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-color); padding: 8px 10px; border-radius: 8px; color: var(--text-main); font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; transition: background 0.2s; }
+      .history-item:hover { background: rgba(255, 255, 255, 0.06); }
+      .history-text { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; }
+      .delete-chat-btn { background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.85rem; padding: 2px 5px; border-radius: 4px; transition: color 0.2s, background 0.2s; opacity: 0.6; }
+      .history-item:hover .delete-chat-btn { opacity: 1; }
+      .delete-chat-btn:hover { color: #f87171; background: rgba(248, 113, 113, 0.1); }
+
       .sidebar-footer { padding: 14px 16px; font-size: 0.75rem; color: var(--text-muted); border-top: 1px solid var(--border-color); }
       
       .main-content { flex: 1; display: flex; flex-direction: column; height: 100%; height: 100dvh; position: relative; overflow: hidden; min-width: 0; }
@@ -104,8 +111,23 @@
       .modal-content { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 14px; padding: 20px; width: 90%; max-width: 350px; display: flex; flex-direction: column; gap: 14px; z-index: 1000000; position: relative; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
       .modal-title { font-size: 1.1rem; font-weight: 700; color: #fff; display: flex; justify-content: space-between; align-items: center; }
       .close-modal { background: transparent; border: none; color: var(--text-muted); font-size: 1.2rem; cursor: pointer; }
-      .settings-group { display: flex; flex-direction: column; gap: 4px; }
-      .lang-select { background: var(--bg-deep); border: 1px solid var(--border-color); color: var(--text-main); padding: 10px; border-radius: 8px; outline: none; font-size: 0.9rem; width: 100%; cursor: pointer; }
+      .settings-group { display: flex; flex-direction: column; gap: 4px; position: relative; }
+      
+      /* Optimized Custom Animated Dropdown Menu */
+      .custom-dropdown { position: relative; width: 100%; }
+      .dropdown-selected { background: var(--bg-deep); border: 1px solid var(--border-color); color: var(--text-main); padding: 10px 12px; border-radius: 8px; outline: none; font-size: 0.9rem; width: 100%; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: border-color 0.2s, box-shadow 0.2s; }
+      .dropdown-selected:hover { border-color: var(--primary); }
+      .dropdown-arrow { font-size: 0.75rem; color: var(--text-muted); transition: transform 0.3s ease; }
+      .custom-dropdown.open .dropdown-arrow { transform: rotate(180deg); }
+      .dropdown-options { position: absolute; top: calc(100% + 6px); left: 0; width: 100%; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 10px; max-height: 200px; overflow-y: auto; z-index: 10000001; box-shadow: 0 10px 25px rgba(0,0,0,0.6); opacity: 0; visibility: hidden; transform: translateY(-8px); transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s ease; }
+      .custom-dropdown.open .dropdown-options { opacity: 1; visibility: visible; transform: translateY(0); }
+      .dropdown-option { padding: 10px 12px; font-size: 0.85rem; color: var(--text-main); cursor: pointer; transition: background 0.15s, color 0.15s; }
+      .dropdown-option:hover { background: rgba(255, 255, 255, 0.08); color: var(--accent-gold); }
+      .dropdown-option.selected { background: rgba(220, 38, 38, 0.15); color: var(--accent-gold); font-weight: 600; }
+      .dropdown-options::-webkit-scrollbar { width: 5px; }
+      .dropdown-options::-webkit-scrollbar-track { background: transparent; }
+      .dropdown-options::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+
       .save-settings-btn { background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end)); color: #fff; border: none; padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 1rem; width: 100%; text-align: center; }
 
       .sidebar-backdrop { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 99; display: none; }
@@ -128,20 +150,27 @@
           
           <div class="settings-group">
             <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 6px;">Appearance Theme:</div>
-            <select class="lang-select" id="themeSelect">
-              <option value="crimson-red">Crimson Red (Default)</option>
-              <option value="neon-blue">Neon Blue</option>
-              <option value="emerald-green">Emerald Green</option>
-              <option value="cyberpunk-gold">Cyberpunk Gold</option>
-              <option value="royal-purple">Royal Purple</option>
-              <option value="sunset-orange">Sunset Orange</option>
-              <option value="matrix-code">Matrix Code</option>
-              <option value="hot-pink">Hot Pink</option>
-              <option value="arctic-cyan">Arctic Cyan</option>
-              <option value="midnight-indigo">Midnight Indigo</option>
-              <option value="solarized-lime">Solarized Lime</option>
-              <option value="pure-monochrome">Pure Monochrome</option>
-            </select>
+            <!-- Custom Animated Dropdown -->
+            <div class="custom-dropdown" id="themeCustomDropdown">
+              <div class="dropdown-selected" id="themeDropdownSelected">
+                <span>Crimson Red (Default)</span>
+                <span class="dropdown-arrow">▼</span>
+              </div>
+              <div class="dropdown-options" id="themeDropdownOptions">
+                <div class="dropdown-option" data-value="crimson-red">Crimson Red (Default)</div>
+                <div class="dropdown-option" data-value="neon-blue">Neon Blue</div>
+                <div class="dropdown-option" data-value="emerald-green">Emerald Green</div>
+                <div class="dropdown-option" data-value="cyberpunk-gold">Cyberpunk Gold</div>
+                <div class="dropdown-option" data-value="royal-purple">Royal Purple</div>
+                <div class="dropdown-option" data-value="sunset-orange">Sunset Orange</div>
+                <div class="dropdown-option" data-value="matrix-code">Matrix Code</div>
+                <div class="dropdown-option" data-value="hot-pink">Hot Pink</div>
+                <div class="dropdown-option" data-value="arctic-cyan">Arctic Cyan</div>
+                <div class="dropdown-option" data-value="midnight-indigo">Midnight Indigo</div>
+                <div class="dropdown-option" data-value="solarized-lime">Solarized Lime</div>
+                <div class="dropdown-option" data-value="pure-monochrome">Pure Monochrome</div>
+              </div>
+            </div>
           </div>
 
           <button class="save-settings-btn" id="saveSettingsBtn" type="button">Save Changes</button>
@@ -178,7 +207,10 @@
           <button class="btn-settings" id="settingsBtn">⚙️ Settings</button>
         </div>
         <div class="recent-chats-container" id="historyListContainer">
-          <div style="text-transform:uppercase; font-size:0.7rem; margin-bottom:6px; color: var(--text-muted);">Chat History</div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <span style="text-transform:uppercase; font-size:0.7rem; color: var(--text-muted);">Chat History</span>
+            <button id="clearAllHistoryBtn" title="Clear All History" style="background: transparent; border: none; color: var(--text-muted); font-size: 0.75rem; cursor: pointer; padding: 2px 4px; border-radius: 4px;" onmouseover="this.style.color='#f87171'" onmouseout="this.style.color='var(--text-muted)'">Clear All</button>
+          </div>
           <div id="historyList" style="display: flex; flex-direction: column; gap: 6px;"><div style="color: var(--text-muted); font-size: 0.8rem;">No recent chats</div></div>
         </div>
         <div class="sidebar-footer">© Aayush Dc</div>
@@ -234,6 +266,7 @@
       const chatMessages = document.getElementById('chatMessages');
       const newChatBtn = document.getElementById('newChatBtn');
       const historyList = document.getElementById('historyList');
+      const clearAllHistoryBtn = document.getElementById('clearAllHistoryBtn');
       const attachBtn = document.getElementById('attachBtn');
       const imageInput = document.getElementById('imageInput');
       const imagePreviewContainer = document.getElementById('imagePreviewContainer');
@@ -245,15 +278,60 @@
       const settingsModal = document.getElementById('settingsModal');
       const closeModal = document.getElementById('closeModal');
       const saveSettingsBtn = document.getElementById('saveSettingsBtn');
-      const themeSelect = document.getElementById('themeSelect');
+
+      // Custom Dropdown Elements
+      const themeCustomDropdown = document.getElementById('themeCustomDropdown');
+      const themeDropdownSelected = document.getElementById('themeDropdownSelected');
+      const themeDropdownSelectedText = themeDropdownSelected.querySelector('span');
+      const themeDropdownOptions = document.querySelectorAll('.dropdown-option');
 
       const selectModelBtn = document.getElementById('selectModelBtn');
       const modelModal = document.getElementById('modelModal');
       const closeModelModal = document.getElementById('closeModelModal');
 
-      let currentTheme = localStorage.getItem('nep_ai_theme') || 'theme-crimson-red';
-      document.body.className = currentTheme;
-      themeSelect.value = currentTheme.replace('theme-', '');
+      const themeNames = {
+        'crimson-red': 'Crimson Red (Default)',
+        'neon-blue': 'Neon Blue',
+        'emerald-green': 'Emerald Green',
+        'cyberpunk-gold': 'Cyberpunk Gold',
+        'royal-purple': 'Royal Purple',
+        'sunset-orange': 'Sunset Orange',
+        'matrix-code': 'Matrix Code',
+        'hot-pink': 'Hot Pink',
+        'arctic-cyan': 'Arctic Cyan',
+        'midnight-indigo': 'Midnight Indigo',
+        'solarized-lime': 'Solarized Lime',
+        'pure-monochrome': 'Pure Monochrome'
+      };
+
+      let currentThemeValue = localStorage.getItem('nep_ai_theme') || 'theme-crimson-red';
+      let cleanThemeValue = currentThemeValue.replace('theme-', '');
+      document.body.className = currentThemeValue;
+      themeDropdownSelectedText.textContent = themeNames[cleanThemeValue] || 'Crimson Red (Default)';
+
+      // Custom Dropdown Logic
+      themeDropdownSelected.addEventListener('click', (e) => {
+        e.stopPropagation();
+        themeCustomDropdown.classList.toggle('open');
+      });
+
+      themeDropdownOptions.forEach(option => {
+        if (option.getAttribute('data-value') === cleanThemeValue) {
+          option.classList.add('selected');
+        }
+        option.addEventListener('click', (e) => {
+          e.stopPropagation();
+          cleanThemeValue = option.getAttribute('data-value');
+          themeDropdownSelectedText.textContent = themeNames[cleanThemeValue];
+          themeDropdownOptions.forEach(opt => opt.classList.remove('selected'));
+          option.classList.add('selected');
+          themeCustomDropdown.classList.remove('open');
+        });
+      });
+
+      window.addEventListener('click', () => {
+        themeCustomDropdown.classList.remove('open');
+      });
 
       let isSidebarOpen = localStorage.getItem('nep_ai_sidebar') !== 'closed';
       if (window.innerWidth > 768 && !isSidebarOpen) sidebar.classList.add('collapsed');
@@ -270,8 +348,20 @@
       menuBtn.addEventListener('click', toggleMenu);
       backdrop.addEventListener('click', () => { sidebar.classList.remove('open'); backdrop.classList.remove('active'); });
 
-      const openSettings = (e) => { if(e)e.preventDefault(); themeSelect.value = (localStorage.getItem('nep_ai_theme') || 'theme-crimson-red').replace('theme-', ''); settingsModal.classList.add('active'); };
-      const closeSettings = (e) => { if(e)e.preventDefault(); settingsModal.classList.remove('active'); };
+      const openSettings = (e) => { 
+        if(e) e.preventDefault(); 
+        cleanThemeValue = (localStorage.getItem('nep_ai_theme') || 'theme-crimson-red').replace('theme-', '');
+        themeDropdownSelectedText.textContent = themeNames[cleanThemeValue] || 'Crimson Red (Default)';
+        themeDropdownOptions.forEach(opt => {
+          if (opt.getAttribute('data-value') === cleanThemeValue) {
+            opt.classList.add('selected');
+          } else {
+            opt.classList.remove('selected');
+          }
+        });
+        settingsModal.classList.add('active'); 
+      };
+      const closeSettings = (e) => { if(e)e.preventDefault(); settingsModal.classList.remove('active'); themeCustomDropdown.classList.remove('open'); };
       settingsBtn.onclick = openSettings; headerSettingsBtn.onclick = openSettings; closeModal.onclick = closeSettings;
       settingsModal.onclick = (e) => { if (e.target === settingsModal) closeSettings(); };
 
@@ -283,7 +373,7 @@
       
       saveSettingsBtn.onclick = (e) => { 
         e.preventDefault(); 
-        localStorage.setItem('nep_ai_theme', 'theme-' + themeSelect.value);
+        localStorage.setItem('nep_ai_theme', 'theme-' + cleanThemeValue);
         settingsModal.classList.remove('active');
         window.location.reload();
       };
@@ -462,11 +552,40 @@
         savedConversations.forEach((chat, idx) => {
           const item = document.createElement('div');
           item.className = 'history-item';
-          item.textContent = chat.title;
+          
+          const textSpan = document.createElement('span');
+          textSpan.className = 'history-text';
+          textSpan.textContent = chat.title;
+          
+          const deleteBtn = document.createElement('button');
+          deleteBtn.className = 'delete-chat-btn';
+          deleteBtn.innerHTML = '🗑️';
+          deleteBtn.title = 'Delete chat';
+          deleteBtn.addEventListener('click', (e) => deleteChat(idx, e));
+
+          item.appendChild(textSpan);
+          item.appendChild(deleteBtn);
+
           item.addEventListener('click', () => { loadChat(idx); if (window.innerWidth <= 768) toggleMenu(); });
           historyList.appendChild(item);
         });
       }
+
+      function deleteChat(index, event) {
+        event.stopPropagation();
+        savedConversations.splice(index, 1);
+        localStorage.setItem('nep_ai_chat_history', JSON.stringify(savedConversations));
+        renderHistory();
+      }
+
+      clearAllHistoryBtn.addEventListener('click', () => {
+        if (savedConversations.length === 0) return;
+        if (confirm("Are you sure you want to clear all chat history?")) {
+          savedConversations = [];
+          localStorage.removeItem('nep_ai_chat_history');
+          renderHistory();
+        }
+      });
 
       function loadChat(index) {
         stopVoiceMode(); window.speechSynthesis.cancel();
