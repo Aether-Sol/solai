@@ -10,7 +10,7 @@
       :root {
         --bg-deep: #0a0a0c;
         --bg-surface: #141416;
-        --border-color: rgba(220, 38, 38, 0.25);
+        --border-color: rgba(220, 38, 38, 0.3);
         --primary: #ef4444;
         --accent-gold: #fbbf24;
         --text-main: #f9fafb;
@@ -18,109 +18,119 @@
         --gradient-start: #ef4444;
         --gradient-end: #991b1b;
         --msg-user: linear-gradient(135deg, #ef4444, #b91c1c);
+        --glow-shadow: 0 0 20px rgba(239, 68, 68, 0.2);
       }
 
-      /* 12 Deep Theme Color Presets - Optimized for Aesthetics */
-      body.theme-crimson-red { --bg-deep: #0a0a0c; --bg-surface: #141416; --primary: #ef4444; --accent-gold: #fbbf24; --border-color: rgba(239, 68, 68, 0.25); --gradient-start: #ef4444; --gradient-end: #991b1b; --msg-user: linear-gradient(135deg, #ef4444, #991b1b); }
-      body.theme-neon-blue { --bg-deep: #050812; --bg-surface: #0b1120; --primary: #3b82f6; --accent-gold: #7dd3fc; --border-color: rgba(59, 130, 246, 0.25); --gradient-start: #3b82f6; --gradient-end: #1d4ed8; --msg-user: linear-gradient(135deg, #3b82f6, #1e40af); }
-      body.theme-emerald-green { --bg-deep: #020f09; --bg-surface: #061f14; --primary: #10b981; --accent-gold: #6ee7b7; --border-color: rgba(16, 185, 129, 0.25); --gradient-start: #10b981; --gradient-end: #047857; --msg-user: linear-gradient(135deg, #10b981, #065f46); }
-      body.theme-cyberpunk-gold { --bg-deep: #120e03; --bg-surface: #1f1705; --primary: #f59e0b; --accent-gold: #fde047; --border-color: rgba(245, 158, 11, 0.25); --gradient-start: #f59e0b; --gradient-end: #b45309; --msg-user: linear-gradient(135deg, #f59e0b, #92400e); }
-      body.theme-royal-purple { --bg-deep: #0a0514; --bg-surface: #120a24; --primary: #8b5cf6; --accent-gold: #d8b4fe; --border-color: rgba(139, 92, 246, 0.25); --gradient-start: #8b5cf6; --gradient-end: #5b21b6; --msg-user: linear-gradient(135deg, #8b5cf6, #4c1d95); }
-      body.theme-sunset-orange { --bg-deep: #120602; --bg-surface: #210b04; --primary: #f97316; --accent-gold: #fdba74; --border-color: rgba(249, 115, 22, 0.25); --gradient-start: #f97316; --gradient-end: #c2410c; --msg-user: linear-gradient(135deg, #f97316, #9a3412); }
-      body.theme-matrix-code { --bg-deep: #020c04; --bg-surface: #051a09; --primary: #22c55e; --accent-gold: #86efac; --border-color: rgba(34, 197, 94, 0.25); --gradient-start: #22c55e; --gradient-end: #15803d; --msg-user: linear-gradient(135deg, #22c55e, #166534); }
-      body.theme-hot-pink { --bg-deep: #12030a; --bg-surface: #220613; --primary: #ec4899; --accent-gold: #f9a8d4; --border-color: rgba(236, 72, 153, 0.25); --gradient-start: #ec4899; --gradient-end: #be185d; --msg-user: linear-gradient(135deg, #ec4899, #9d174d); }
-      body.theme-arctic-cyan { --bg-deep: #031014; --bg-surface: #071f26; --primary: #06b6d4; --accent-gold: #67e8f9; --border-color: rgba(6, 182, 212, 0.25); --gradient-start: #06b6d4; --gradient-end: #0e7490; --msg-user: linear-gradient(135deg, #06b6d4, #155e75); }
-      body.theme-midnight-indigo { --bg-deep: #060614; --bg-surface: #0c0c24; --primary: #6366f1; --accent-gold: #a5b4fc; --border-color: rgba(99, 102, 241, 0.25); --gradient-start: #6366f1; --gradient-end: #4338ca; --msg-user: linear-gradient(135deg, #6366f1, #3730a3); }
-      body.theme-solarized-lime { --bg-deep: #0b0f03; --bg-surface: #141c05; --primary: #84cc16; --accent-gold: #bef264; --border-color: rgba(132, 204, 22, 0.25); --gradient-start: #84cc16; --gradient-end: #4d7c0f; --msg-user: linear-gradient(135deg, #84cc16, #3f6212); }
-      body.theme-pure-monochrome { --bg-deep: #09090b; --bg-surface: #121214; --primary: #71717a; --accent-gold: #e4e4e7; --border-color: rgba(113, 113, 122, 0.25); --gradient-start: #71717a; --gradient-end: #3f3f46; --msg-user: linear-gradient(135deg, #52525b, #27272a); }
+      /* 12 Ultra-Polished Aesthetic Themes with Enhanced Glows */
+      body.theme-crimson-red { --bg-deep: #0a0a0c; --bg-surface: #141416; --primary: #ef4444; --accent-gold: #fbbf24; --border-color: rgba(239, 68, 68, 0.35); --gradient-start: #ef4444; --gradient-end: #991b1b; --msg-user: linear-gradient(135deg, #ef4444, #991b1b); --glow-shadow: 0 0 25px rgba(239, 68, 68, 0.3); }
+      body.theme-neon-blue { --bg-deep: #030712; --bg-surface: #0b1329; --primary: #3b82f6; --accent-gold: #38bdf8; --border-color: rgba(59, 130, 246, 0.4); --gradient-start: #3b82f6; --gradient-end: #1d4ed8; --msg-user: linear-gradient(135deg, #3b82f6, #1e40af); --glow-shadow: 0 0 25px rgba(59, 130, 246, 0.35); }
+      body.theme-emerald-green { --bg-deep: #020a06; --bg-surface: #061a11; --primary: #10b981; --accent-gold: #34d399; --border-color: rgba(16, 185, 129, 0.4); --gradient-start: #10b981; --gradient-end: #047857; --msg-user: linear-gradient(135deg, #10b981, #065f46); --glow-shadow: 0 0 25px rgba(16, 185, 129, 0.35); }
+      body.theme-cyberpunk-gold { --bg-deep: #0d0a02; --bg-surface: #1a1404; --primary: #f59e0b; --accent-gold: #fef08a; --border-color: rgba(245, 158, 11, 0.4); --gradient-start: #f59e0b; --gradient-end: #b45309; --msg-user: linear-gradient(135deg, #f59e0b, #92400e); --glow-shadow: 0 0 25px rgba(245, 158, 11, 0.35); }
+      body.theme-royal-purple { --bg-deep: #080310; --bg-surface: #130926; --primary: #8b5cf6; --accent-gold: #e9d5ff; --border-color: rgba(139, 92, 246, 0.4); --gradient-start: #8b5cf6; --gradient-end: #5b21b6; --msg-user: linear-gradient(135deg, #8b5cf6, #4c1d95); --glow-shadow: 0 0 25px rgba(139, 92, 246, 0.35); }
+      body.theme-sunset-orange { --bg-deep: #0f0502; --bg-surface: #1f0b04; --primary: #f97316; --accent-gold: #fed7aa; --border-color: rgba(249, 115, 22, 0.4); --gradient-start: #f97316; --gradient-end: #c2410c; --msg-user: linear-gradient(135deg, #f97316, #9a3412); --glow-shadow: 0 0 25px rgba(249, 115, 22, 0.35); }
+      body.theme-matrix-code { --bg-deep: #010a03; --bg-surface: #031707; --primary: #22c55e; --accent-gold: #bbf7d0; --border-color: rgba(34, 197, 94, 0.4); --gradient-start: #22c55e; --gradient-end: #15803d; --msg-user: linear-gradient(135deg, #22c55e, #166534); --glow-shadow: 0 0 25px rgba(34, 197, 94, 0.35); }
+      body.theme-hot-pink { --bg-deep: #0f0208; --bg-surface: #1f0412; --primary: #ec4899; --accent-gold: #fbcfe8; --border-color: rgba(236, 72, 153, 0.4); --gradient-start: #ec4899; --gradient-end: #be185d; --msg-user: linear-gradient(135deg, #ec4899, #9d174d); --glow-shadow: 0 0 25px rgba(236, 72, 153, 0.35); }
+      body.theme-arctic-cyan { --bg-deep: #020d12; --bg-surface: #051c24; --primary: #06b6d4; --accent-gold: #cffafe; --border-color: rgba(6, 182, 212, 0.4); --gradient-start: #06b6d4; --gradient-end: #0e7490; --msg-user: linear-gradient(135deg, #06b6d4, #155e75); --glow-shadow: 0 0 25px rgba(6, 182, 212, 0.35); }
+      body.theme-midnight-indigo { --bg-deep: #040412; --bg-surface: #0a0a24; --primary: #6366f1; --accent-gold: #c7d2fe; --border-color: rgba(99, 102, 241, 0.4); --gradient-start: #6366f1; --gradient-end: #4338ca; --msg-user: linear-gradient(135deg, #6366f1, #3730a3); --glow-shadow: 0 0 25px rgba(99, 102, 241, 0.35); }
+      body.theme-solarized-lime { --bg-deep: #080d02; --bg-surface: #141f04; --primary: #84cc16; --accent-gold: #ecfccb; --border-color: rgba(132, 204, 22, 0.4); --gradient-start: #84cc16; --gradient-end: #4d7c0f; --msg-user: linear-gradient(135deg, #84cc16, #3f6212); --glow-shadow: 0 0 25px rgba(132, 204, 22, 0.35); }
+      body.theme-pure-monochrome { --bg-deep: #070709; --bg-surface: #121217; --primary: #a1a1aa; --accent-gold: #f4f4f5; --border-color: rgba(161, 161, 170, 0.35); --gradient-start: #71717a; --gradient-end: #3f3f46; --msg-user: linear-gradient(135deg, #52525b, #27272a); --glow-shadow: 0 0 25px rgba(113, 113, 122, 0.25); }
 
-      /* Flower Animation Styles */
-      .flower-drop { position: fixed; top: -10vh; z-index: 9999; user-select: none; pointer-events: none; animation: fall linear forwards; filter: drop-shadow(0 0 5px rgba(255,255,255,0.3)); }
-      @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
+      /* Optimized Flower Animation Styles */
+      .flower-drop { position: fixed; top: -10vh; z-index: 9999; user-select: none; pointer-events: none; animation: fall linear forwards; will-change: transform; filter: drop-shadow(0 0 4px rgba(255,255,255,0.3)); }
+      @keyframes fall { to { transform: translateY(115vh) rotate(360deg); } }
 
       * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
       html, body { background-color: var(--bg-deep); color: var(--text-main); width: 100%; height: 100%; height: 100dvh; overflow: hidden; font-size: 15px; transition: background 0.3s ease; }
       .app-container { display: flex; width: 100%; height: 100%; height: 100dvh; position: relative; overflow: hidden; }
       
-      .sidebar { width: 280px; background-color: var(--bg-surface); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; z-index: 100; transition: margin-left 0.3s ease-in-out, transform 0.3s ease-in-out; flex-shrink: 0; height: 100%; position: relative; }
+      .sidebar { width: 280px; background-color: var(--bg-surface); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; z-index: 100; transition: margin-left 0.3s ease-in-out, transform 0.3s ease-in-out; flex-shrink: 0; height: 100%; position: relative; box-shadow: 4px 0 20px rgba(0,0,0,0.3); }
       .sidebar.collapsed { margin-left: -280px; }
       
-      .sidebar-top { padding: 18px 20px; font-weight: 800; font-size: 1.5rem; color: var(--accent-gold); display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-color); }
+      .sidebar-top { padding: 18px 20px; font-weight: 800; font-size: 1.5rem; color: var(--accent-gold); display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-color); text-shadow: 0 0 10px var(--border-color); }
       .sidebar-actions { padding: 16px; display: flex; flex-direction: column; gap: 8px; }
-      .btn-new-chat, .btn-settings { background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end)); color: #fff; border: none; padding: 10px; border-radius: 10px; width: 100%; font-weight: 600; cursor: pointer; font-size: 0.85rem; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3); text-align: center; }
-      .btn-settings { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-color); color: var(--text-main); }
+      .btn-new-chat, .btn-settings { background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end)); color: #fff; border: none; padding: 11px; border-radius: 10px; width: 100%; font-weight: 600; cursor: pointer; font-size: 0.85rem; box-shadow: var(--glow-shadow); text-align: center; transition: transform 0.2s, filter 0.2s; }
+      .btn-new-chat:hover, .btn-settings:hover { filter: brightness(1.15); transform: translateY(-1px); }
+      .btn-settings { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-color); color: var(--text-main); box-shadow: none; }
       .recent-chats-container { flex: 1; padding: 0 16px; color: var(--text-muted); font-size: 0.85rem; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; }
       
-      .history-item { background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-color); padding: 8px 10px; border-radius: 8px; color: var(--text-main); font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; transition: background 0.2s; }
-      .history-item:hover { background: rgba(255, 255, 255, 0.06); }
+      .history-item { background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); padding: 9px 11px; border-radius: 9px; color: var(--text-main); font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; transition: background 0.2s, border-color 0.2s; }
+      .history-item:hover { background: rgba(255, 255, 255, 0.06); border-color: var(--primary); }
       .history-text { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; }
       .delete-chat-btn { background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.85rem; padding: 2px 5px; border-radius: 4px; transition: color 0.2s, background 0.2s; opacity: 0.6; }
       .history-item:hover .delete-chat-btn { opacity: 1; }
-      .delete-chat-btn:hover { color: #f87171; background: rgba(248, 113, 113, 0.1); }
+      .delete-chat-btn:hover { color: #f87171; background: rgba(248, 113, 113, 0.15); }
 
       .sidebar-footer { padding: 14px 16px; font-size: 0.75rem; color: var(--text-muted); border-top: 1px solid var(--border-color); }
       
-      .main-content { flex: 1; display: flex; flex-direction: column; height: 100%; height: 100dvh; position: relative; overflow: hidden; min-width: 0; }
-      .chat-header { padding: 12px 16px; border-bottom: 1px solid var(--border-color); background: var(--bg-surface); display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
+      .main-content { flex: 1; display: flex; flex-direction: column; height: 100%; height: 100dvh; position: relative; overflow: hidden; min-width: 0; background: radial-gradient(circle at top center, var(--bg-surface) 0%, var(--bg-deep) 70%); }
+      .chat-header { padding: 12px 16px; border-bottom: 1px solid var(--border-color); background: var(--bg-surface); display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
       .header-left-group { display: flex; align-items: center; gap: 10px; }
       
-      .menu-toggle { display: flex; align-items: center; justify-content: center; background: var(--bg-deep); border: 1px solid var(--border-color); color: var(--text-main); padding: 8px 12px; border-radius: 10px; cursor: pointer; font-size: 1.1rem; transition: background 0.2s; }
-      .menu-toggle:hover { background: rgba(255, 255, 255, 0.1); }
+      .menu-toggle { display: flex; align-items: center; justify-content: center; background: var(--bg-deep); border: 1px solid var(--border-color); color: var(--text-main); padding: 8px 12px; border-radius: 10px; cursor: pointer; font-size: 1.1rem; transition: background 0.2s, border-color 0.2s; }
+      .menu-toggle:hover { background: rgba(255, 255, 255, 0.1); border-color: var(--primary); }
       
-      .header-settings-btn { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-color); color: var(--text-main); padding: 6px 12px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; font-weight: 500; display: flex; align-items: center; gap: 6px; transition: background 0.2s; }
-      .header-settings-btn:hover { background: rgba(255, 255, 255, 0.1); }
+      .header-settings-btn { background: rgba(255, 255, 255, 0.04); border: 1px solid var(--border-color); color: var(--text-main); padding: 6px 12px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; font-weight: 500; display: flex; align-items: center; gap: 6px; transition: background 0.2s, border-color 0.2s; }
+      .header-settings-btn:hover { background: rgba(255, 255, 255, 0.08); border-color: var(--primary); }
 
-      .neon-title { font-size: 1.2rem; font-weight: 800; color: #fff; text-transform: uppercase; letter-spacing: 1px; text-shadow: 0 0 10px var(--accent-gold); }
+      .neon-title { font-size: 1.2rem; font-weight: 800; color: #fff; text-transform: uppercase; letter-spacing: 1.5px; text-shadow: 0 0 12px var(--accent-gold); }
       
       .chat-messages-container { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 14px; -webkit-overflow-scrolling: touch; }
       
       .welcome-hero { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center; gap: 8px; margin: auto; padding: 20px; }
-      .welcome-hero h1 { font-size: 2.2rem; font-weight: 800; color: #fff; text-shadow: 0 0 15px var(--primary); }
+      .welcome-hero h1 { font-size: 2.3rem; font-weight: 800; color: #fff; text-shadow: 0 0 20px var(--primary); }
       .welcome-hero p { color: var(--text-muted); font-size: 1.05rem; }
 
       .message-wrapper { display: flex; flex-direction: column; max-width: 800px; width: 100%; margin: 0 auto; gap: 4px; }
       .message-wrapper.user { align-items: flex-end; }
       .message-wrapper.assistant { align-items: flex-start; }
-      .message-bubble { padding: 11px 15px; border-radius: 14px; font-size: 0.9rem; line-height: 1.5; word-break: break-word; width: 100%; }
-      .message-wrapper.user .message-bubble { background: var(--msg-user); color: #fff; border-bottom-right-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+      .message-bubble { padding: 12px 16px; border-radius: 14px; font-size: 0.9rem; line-height: 1.5; word-break: break-word; width: 100%; box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
+      .message-wrapper.user .message-bubble { background: var(--msg-user); color: #fff; border-bottom-right-radius: 4px; box-shadow: var(--glow-shadow); }
       .message-wrapper.assistant .message-bubble { background: var(--bg-surface); border: 1px solid var(--border-color); color: var(--text-main); border-bottom-left-radius: 4px; }
       .message-bubble p { margin-bottom: 8px; }
       .message-bubble pre { background: var(--bg-deep); border: 1px solid var(--border-color); padding: 10px; border-radius: 8px; overflow-x: auto; margin: 8px 0; }
       .message-bubble code { font-family: monospace; background: rgba(255,255,255,0.1); padding: 2px 4px; border-radius: 4px; font-size: 0.85rem; }
-      .chat-img-preview { max-width: 200px; max-height: 200px; border-radius: 8px; margin-bottom: 8px; display: block; object-fit: cover; }
-      .msg-footer { display: flex; align-items: center; gap: 6px; padding: 0 4px; }
-      .tts-btn { background: transparent; border: 1px solid var(--border-color); color: var(--text-muted); padding: 3px 8px; border-radius: 6px; font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; gap: 4px; }
+      .chat-img-preview { max-width: 200px; max-height: 200px; border-radius: 8px; margin-bottom: 8px; display: block; object-fit: cover; border: 1px solid var(--border-color); }
       
-      .chat-input-wrapper { padding: 8px 12px calc(8px + env(safe-area-inset-bottom, 0px)) 12px; background: var(--bg-surface); border-top: 1px solid var(--border-color); flex-shrink: 0; display: flex; flex-direction: column; gap: 6px; }
+      /* Direct Download Button for Generated Images */
+      .image-download-btn { display: inline-flex; align-items: center; gap: 6px; background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end)); color: #fff; border: none; padding: 7px 14px; border-radius: 8px; font-size: 0.8rem; font-weight: 600; cursor: pointer; margin-top: 10px; box-shadow: var(--glow-shadow); transition: transform 0.2s, filter 0.2s; }
+      .image-download-btn:hover { filter: brightness(1.15); transform: translateY(-1px); }
+
+      .msg-footer { display: flex; align-items: center; gap: 6px; padding: 0 4px; }
+      .tts-btn { background: transparent; border: 1px solid var(--border-color); color: var(--text-muted); padding: 3px 8px; border-radius: 6px; font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; gap: 4px; transition: background 0.2s, color 0.2s; }
+      .tts-btn:hover { background: rgba(255,255,255,0.08); color: var(--text-main); }
+      
+      .chat-input-wrapper { padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 0px)) 12px; background: var(--bg-surface); border-top: 1px solid var(--border-color); flex-shrink: 0; display: flex; flex-direction: column; gap: 6px; box-shadow: 0 -4px 20px rgba(0,0,0,0.2); }
       .stop-gen-container { display: flex; justify-content: center; max-width: 900px; width: 100%; margin: 0 auto; }
       .stop-btn { background: rgba(220, 38, 38, 0.2); border: 1px solid var(--border-color); color: var(--text-main); padding: 6px 14px; border-radius: 8px; font-size: 0.8rem; font-weight: 600; cursor: pointer; display: none; align-items: center; gap: 6px; }
       .stop-btn.active { display: flex; }
-      .selected-image-preview-container { display: none; align-items: center; gap: 8px; padding: 4px 8px; background: rgba(255, 255, 255, 0.05); border-radius: 8px; width: fit-content; }
+      .selected-image-preview-container { display: none; align-items: center; gap: 8px; padding: 4px 8px; background: rgba(255, 255, 255, 0.05); border-radius: 8px; width: fit-content; border: 1px solid var(--border-color); }
       .selected-image-preview-container.active { display: flex; }
       .selected-thumb { width: 36px; height: 36px; object-fit: cover; border-radius: 4px; }
       .remove-img-btn { background: transparent; border: none; color: #f87171; cursor: pointer; font-size: 1rem; font-weight: bold; }
       
-      .chat-input-area { display: flex; align-items: flex-end; gap: 8px; max-width: 900px; width: 100%; margin: 0 auto; background: var(--bg-deep); border: 1px solid var(--border-color); border-radius: 12px; padding: 6px 10px; }
-      .attach-btn { background: transparent; border: none; color: var(--text-muted); font-size: 1.2rem; cursor: pointer; padding: 4px; display: flex; align-items: center; justify-content: center; margin-bottom: 2px; }
+      .chat-input-area { display: flex; align-items: flex-end; gap: 8px; max-width: 900px; width: 100%; margin: 0 auto; background: var(--bg-deep); border: 1px solid var(--border-color); border-radius: 12px; padding: 6px 10px; box-shadow: inset 0 2px 6px rgba(0,0,0,0.3); }
+      .attach-btn { background: transparent; border: none; color: var(--text-muted); font-size: 1.2rem; cursor: pointer; padding: 4px; display: flex; align-items: center; justify-content: center; margin-bottom: 2px; transition: color 0.2s; }
+      .attach-btn:hover { color: var(--text-main); }
       .chat-input { flex: 1; background: transparent; border: none; color: var(--text-main); outline: none; resize: none; max-height: 90px; font-size: 0.9rem; padding: 6px 0; line-height: 1.3; overflow-y: auto; }
       
       .input-action-buttons { display: flex; align-items: center; gap: 6px; margin-bottom: 2px; flex-shrink: 0; }
-      .voice-mode-btn { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-color); color: var(--text-muted); width: 34px; height: 34px; border-radius: 9px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1rem; transition: all 0.2s; }
+      .voice-mode-btn { background: rgba(255, 255, 255, 0.04); border: 1px solid var(--border-color); color: var(--text-muted); width: 34px; height: 34px; border-radius: 9px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1rem; transition: all 0.2s; }
       .voice-mode-btn.listening { background: var(--primary); color: #fff; border-color: var(--primary); animation: pulse-mic 1.5s infinite; }
       @keyframes pulse-mic { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.4); } 70% { transform: scale(1.05); box-shadow: 0 0 0 8px rgba(0, 0, 0, 0); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0, 0, 0, 0); } }
 
-      .send-btn { background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end)); border: none; color: #fff; width: 34px; height: 34px; border-radius: 9px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+      .send-btn { background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end)); border: none; color: #fff; width: 34px; height: 34px; border-radius: 9px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: var(--glow-shadow); transition: transform 0.2s, filter 0.2s; }
+      .send-btn:hover { filter: brightness(1.15); transform: translateY(-1px); }
       
-      .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.8); z-index: 999999; display: none; align-items: center; justify-content: center; }
+      .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); z-index: 999999; display: none; align-items: center; justify-content: center; }
       .modal-overlay.active { display: flex; }
-      .modal-content { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 14px; padding: 20px; width: 90%; max-width: 350px; display: flex; flex-direction: column; gap: 14px; z-index: 1000000; position: relative; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+      .modal-content { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 16px; padding: 20px; width: 90%; max-width: 360px; display: flex; flex-direction: column; gap: 14px; z-index: 1000000; position: relative; box-shadow: 0 15px 35px rgba(0,0,0,0.6), var(--glow-shadow); }
       .modal-title { font-size: 1.1rem; font-weight: 700; color: #fff; display: flex; justify-content: space-between; align-items: center; }
       .close-modal { background: transparent; border: none; color: var(--text-muted); font-size: 1.2rem; cursor: pointer; }
       .settings-group { display: flex; flex-direction: column; gap: 4px; position: relative; }
       
-      /* Optimized Custom Animated Dropdown Menu */
+      /* Custom Animated Dropdown Menu */
       .custom-dropdown { position: relative; width: 100%; }
-      .dropdown-selected { background: var(--bg-deep); border: 1px solid var(--border-color); color: var(--text-main); padding: 10px 12px; border-radius: 8px; outline: none; font-size: 0.9rem; width: 100%; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: border-color 0.2s, box-shadow 0.2s; }
+      .dropdown-selected { background: var(--bg-deep); border: 1px solid var(--border-color); color: var(--text-main); padding: 10px 12px; border-radius: 9px; outline: none; font-size: 0.9rem; width: 100%; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: border-color 0.2s, box-shadow 0.2s; }
       .dropdown-selected:hover { border-color: var(--primary); }
       .dropdown-arrow { font-size: 0.75rem; color: var(--text-muted); transition: transform 0.3s ease; }
       .custom-dropdown.open .dropdown-arrow { transform: rotate(180deg); }
@@ -128,14 +138,15 @@
       .custom-dropdown.open .dropdown-options { opacity: 1; visibility: visible; transform: translateY(0); }
       .dropdown-option { padding: 10px 12px; font-size: 0.85rem; color: var(--text-main); cursor: pointer; transition: background 0.15s, color 0.15s; }
       .dropdown-option:hover { background: rgba(255, 255, 255, 0.08); color: var(--accent-gold); }
-      .dropdown-option.selected { background: rgba(220, 38, 38, 0.15); color: var(--accent-gold); font-weight: 600; }
+      .dropdown-option.selected { background: rgba(220, 38, 38, 0.2); color: var(--accent-gold); font-weight: 600; }
       .dropdown-options::-webkit-scrollbar { width: 5px; }
       .dropdown-options::-webkit-scrollbar-track { background: transparent; }
       .dropdown-options::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
 
-      .save-settings-btn { background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end)); color: #fff; border: none; padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 1rem; width: 100%; text-align: center; }
+      .save-settings-btn { background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end)); color: #fff; border: none; padding: 12px; border-radius: 9px; font-weight: 600; cursor: pointer; font-size: 1rem; width: 100%; text-align: center; box-shadow: var(--glow-shadow); transition: filter 0.2s; }
+      .save-settings-btn:hover { filter: brightness(1.15); }
 
-      .sidebar-backdrop { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 99; display: none; }
+      .sidebar-backdrop { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); z-index: 99; display: none; backdrop-filter: blur(2px); }
       
       @media (max-width: 768px) {
         .sidebar { position: fixed; height: 100%; transform: translateX(-100%); margin-left: 0; }
@@ -292,18 +303,19 @@
       const modelModal = document.getElementById('modelModal');
       const closeModelModal = document.getElementById('closeModelModal');
 
-      // Flower Raining Animation Logic
+      // Optimized Flower Raining Animation Logic (capped at max 12 items to eliminate lag)
       function createFlower() {
+        if (document.querySelectorAll('.flower-drop').length > 12) return;
         const flower = document.createElement('div');
         flower.innerHTML = ['🌸', '🌺', '🌼', '🌷', '✨'][Math.floor(Math.random() * 5)];
         flower.className = 'flower-drop';
         flower.style.left = Math.random() * 100 + 'vw';
-        flower.style.fontSize = (Math.random() * 1.5 + 0.8) + 'rem';
-        flower.style.animationDuration = (Math.random() * 4 + 3) + 's';
+        flower.style.fontSize = (Math.random() * 1.2 + 0.8) + 'rem';
+        flower.style.animationDuration = (Math.random() * 3 + 4) + 's';
         document.body.appendChild(flower);
-        setTimeout(() => flower.remove(), 6000);
+        setTimeout(() => flower.remove(), 7000);
       }
-      setInterval(createFlower, 400); // Rains every 400ms
+      setInterval(createFlower, 800);
 
       const themeNames = {
         'crimson-red': 'Crimson Red (Default)',
@@ -387,6 +399,7 @@
 
       let conversationHistory = [];
       let savedConversations = JSON.parse(localStorage.getItem('nep_ai_chat_history') || '[]');
+      let activeChatIndex = null;
       let currentAbortController = null;
       let attachedBase64Image = null;
 
@@ -404,6 +417,28 @@
         reader.readAsDataURL(file);
       });
       removeImgBtn.addEventListener('click', () => { attachedBase64Image = null; imageInput.value = ''; imagePreviewContainer.classList.remove('active'); });
+
+      // Direct Blob Image Download Function (No redirects)
+      async function downloadGeneratedImage(url) {
+        try {
+          const response = await fetch(url);
+          const blob = await response.blob();
+          const blobUrl = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = blobUrl;
+          a.download = `nep-ai-image-${Date.now()}.png`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          window.URL.revokeObjectURL(blobUrl);
+        } catch (err) {
+          const a = document.createElement('a');
+          a.href = url;
+          a.target = '_blank';
+          a.download = 'nep-ai-image.png';
+          a.click();
+        }
+      }
 
       async function callGroqCloudAPI(promptText, imageUrl, isVoiceLoop = false) {
         const loadingId = 'msg-' + Date.now();
@@ -452,6 +487,7 @@
           if (error.name === 'AbortError') {
             appendMessageUI('assistant', '_Generation stopped._');
             conversationHistory.push({ role: 'assistant', content: 'Generation stopped.' });
+            saveCurrentChatToHistory();
           } else {
             appendMessageUI('assistant', 'Network error connecting to API.');
           }
@@ -482,7 +518,7 @@
         const text = chatInput.value.trim(), activeImage = attachedBase64Image;
         if (!text && !activeImage) return;
 
-        // NEW: Pollinations AI Generation Logic
+        // Pollinations AI Generation Logic
         const lowerText = text.toLowerCase();
         const imageTriggers = ['create', 'make', 'generate', 'genrate', 'image', 'photo', 'pic', 'picture'];
         const isImageRequest = imageTriggers.some(word => lowerText.includes(word));
@@ -497,16 +533,14 @@
 
           const randomSeed = Math.floor(Math.random() * 9999999);
           const promptEncoded = encodeURIComponent(text);
-          // High Quality Pollinations Image Request
           const imgUrl = `https://image.pollinations.ai/prompt/${promptEncoded}?width=1024&height=1024&nologo=true&enhance=true&seed=${randomSeed}`;
           
-          const imgHtml = `<br><br><img src="${imgUrl}" style="max-width: 100%; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);" onload="document.getElementById('chatMessages').scrollTop = document.getElementById('chatMessages').scrollHeight;" alt="Generated AI Image" />`;
+          const imgHtml = `<br><br><img src="${imgUrl}" style="max-width: 100%; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); border: 1px solid var(--border-color);" onload="document.getElementById('chatMessages').scrollTop = document.getElementById('chatMessages').scrollHeight;" alt="Generated AI Image" /><br><button class="image-download-btn" onclick="downloadGeneratedImage('${imgUrl}')">📥 Download Image</button>`;
           const aiReply = "Here is the masterpiece you requested:" + imgHtml;
           
           setTimeout(() => {
             document.getElementById(loadingId)?.remove();
             conversationHistory.push({ role: 'user', content: text });
-            // Saves exactly as HTML into content, so marked.js will parse it later and images NEVER disappear on history load!
             conversationHistory.push({ role: 'assistant', content: aiReply });
             appendMessageUI('assistant', aiReply);
             saveCurrentChatToHistory();
@@ -593,6 +627,10 @@
         savedConversations.forEach((chat, idx) => {
           const item = document.createElement('div');
           item.className = 'history-item';
+          if (idx === activeChatIndex) {
+            item.style.borderColor = 'var(--primary)';
+            item.style.background = 'rgba(255,255,255,0.05)';
+          }
           
           const textSpan = document.createElement('span');
           textSpan.className = 'history-text';
@@ -615,6 +653,13 @@
       function deleteChat(index, event) {
         event.stopPropagation();
         savedConversations.splice(index, 1);
+        if (activeChatIndex === index) {
+          activeChatIndex = null;
+          conversationHistory = [];
+          chatMessages.innerHTML = `<div class="welcome-hero" id="welcomeHero"><h1>Hello! I am Nep AI</h1><p>How can I help you today?</p></div>`;
+        } else if (activeChatIndex > index) {
+          activeChatIndex--;
+        }
         localStorage.setItem('nep_ai_chat_history', JSON.stringify(savedConversations));
         renderHistory();
       }
@@ -623,6 +668,7 @@
         if (savedConversations.length === 0) return;
         if (confirm("Are you sure you want to clear all chat history?")) {
           savedConversations = [];
+          activeChatIndex = null;
           localStorage.removeItem('nep_ai_chat_history');
           renderHistory();
         }
@@ -632,6 +678,7 @@
         stopVoiceMode(); window.speechSynthesis.cancel();
         if (currentAbortController) currentAbortController.abort();
         stopBtn.classList.remove('active');
+        activeChatIndex = index;
         conversationHistory = [...savedConversations[index].messages];
         chatMessages.innerHTML = '';
         conversationHistory.forEach(msg => {
@@ -642,15 +689,17 @@
           }
           appendMessageUI(msg.role === 'user' ? 'user' : 'assistant', content, img);
         });
+        renderHistory();
       }
 
       newChatBtn.addEventListener('click', () => {
         stopVoiceMode(); window.speechSynthesis.cancel();
         if (currentAbortController) currentAbortController.abort();
         stopBtn.classList.remove('active');
-        if (conversationHistory.length > 0) saveCurrentChatToHistory();
+        activeChatIndex = null;
         conversationHistory = [];
         chatMessages.innerHTML = `<div class="welcome-hero" id="welcomeHero"><h1>Hello! I am Nep AI</h1><p>How can I help you today?</p></div>`;
+        renderHistory();
         if (window.innerWidth <= 768) toggleMenu();
       });
 
@@ -661,7 +710,15 @@
         if (first) {
           title = typeof first.content === 'string' ? first.content.slice(0, 30) + '...' : (first.content.find(c => c.type === 'text')?.text.slice(0, 30) + '...' || "Image Query");
         }
-        savedConversations.unshift({ title, messages: [...conversationHistory] });
+
+        if (activeChatIndex !== null && savedConversations[activeChatIndex]) {
+          savedConversations[activeChatIndex].title = title;
+          savedConversations[activeChatIndex].messages = [...conversationHistory];
+        } else {
+          savedConversations.unshift({ title, messages: [...conversationHistory] });
+          activeChatIndex = 0;
+        }
+
         if (savedConversations.length > 15) savedConversations.pop();
         localStorage.setItem('nep_ai_chat_history', JSON.stringify(savedConversations));
         renderHistory();
