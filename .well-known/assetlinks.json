@@ -3,6 +3,6 @@
       "target": {
         "namespace": "android_app",
         "package_name": "dev.pages.solai.twa",
-        "sha256_cert_fingerprints": ["E6:D8:85:D3:E7:17:FF:2D:16:A0:43:B0:85:9A:92:0F:39:FB:92:95:C4:66:88:05:78:AE:0D:1C:88:D3:A6:62"]
+        "sha256_cert_fingerprints": ["1C:CE:A0:19:67:AA:65:67:A2:17:31:99:AD:A0:72:3F:21:99:57:53:E0:BE:32:AE:68:F8:F3:D1:FC:CF:B7:48"]
       }
     }]
