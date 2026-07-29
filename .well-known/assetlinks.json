@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "dev.pages.solai.twa",
+        "sha256_cert_fingerprints": ["E6:D8:85:D3:E7:17:FF:2D:16:A0:43:B0:85:9A:92:0F:39:FB:92:95:C4:66:88:05:78:AE:0D:1C:88:D3:A6:62"]
+      }
+    }]
