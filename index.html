@@ -36,7 +36,6 @@
       .header-left-group { display: flex; align-items: center; gap: 10px; }
       .mobile-menu-toggle { display: none; align-items: center; justify-content: center; background: var(--bg-deep); border: 1px solid var(--border-color); color: var(--text-main); padding: 8px 12px; border-radius: 10px; cursor: pointer; font-size: 1.1rem; }
       
-      /* Professional Header Settings Button */
       .header-settings-btn { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-color); color: var(--text-main); padding: 6px 12px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; font-weight: 500; display: flex; align-items: center; gap: 6px; transition: background 0.2s; }
       .header-settings-btn:hover { background: rgba(255, 255, 255, 0.1); }
 
@@ -44,7 +43,6 @@
       
       .chat-messages-container { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 14px; -webkit-overflow-scrolling: touch; }
       
-      /* Welcome Hero Greeting Header */
       .welcome-hero { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center; gap: 8px; margin: auto; padding: 20px; }
       .welcome-hero h1 { font-size: 2.2rem; font-weight: 800; color: #fff; text-shadow: 0 0 15px rgba(220, 38, 38, 0.4); }
       .welcome-hero p { color: var(--text-muted); font-size: 1.05rem; }
@@ -75,7 +73,6 @@
       .chat-input { flex: 1; background: transparent; border: none; color: var(--text-main); outline: none; resize: none; max-height: 90px; font-size: 0.9rem; padding: 6px 0; line-height: 1.3; }
       .send-btn { background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end)); border: none; color: #fff; width: 34px; height: 34px; border-radius: 9px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-bottom: 2px; }
       
-      /* Modal Settings with High Z-Index */
       .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.7); z-index: 99999; display: none; align-items: center; justify-content: center; pointer-events: auto; }
       .modal-overlay.active { display: flex; }
       .modal-content { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 14px; padding: 20px; width: 90%; max-width: 350px; display: flex; flex-direction: column; gap: 14px; z-index: 100000; position: relative; pointer-events: auto; }
@@ -94,7 +91,7 @@
       }
     </style>
   </head>
-  <body>
+    <body>
     <div class="app-container">
       <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
       
@@ -108,7 +105,7 @@
             <option value="Nepali">Nepali (नेपाली)</option>
             <option value="Hindi">Hindi (हिन्दी)</option>
           </select>
-          <button class="save-settings-btn" id="saveSettingsBtn">Save Changes</button>
+          <button class="save-settings-btn" id="saveSettingsBtn" type="button">Save Changes</button>
         </div>
       </div>
 
@@ -129,7 +126,7 @@
         <header class="chat-header">
           <div class="header-left-group">
             <button class="mobile-menu-toggle" id="mobileMenuBtn">&#9776;</button>
-            <button class="header-settings-btn" id="headerSettingsBtn">⚙️ <span id="txtHeaderSettings">Settings</span></button>
+            <button class="header-settings-btn" id="headerSettingsBtn" type="button">⚙️ <span id="txtHeaderSettings">Settings</span></button>
           </div>
           <div class="neon-title">Nep AI</div>
         </header>
@@ -164,7 +161,7 @@
       const translations = {
         English: {
           newChat: "+ New Chat",
-          settings: "⚙️ Settings",
+          settings: "Settings",
           historyHeader: "Chat History",
           noHistory: "No recent chats",
           modalHeader: "Settings / Language",
@@ -185,7 +182,7 @@
         },
         Nepali: {
           newChat: "+ नयाँ च्याट",
-          settings: "⚙️ सेटिङ्स",
+          settings: "सेटिङ्स",
           historyHeader: "कुराकानी इतिहास",
           noHistory: "कुनै इतिहास छैन",
           modalHeader: "सेटिङ्स / भाषा",
@@ -206,7 +203,7 @@
         },
         Hindi: {
           newChat: "+ नया चैट",
-          settings: "⚙️ सेटिंग्ज़",
+          settings: "सेटिंग्ज़",
           historyHeader: "चैट इतिहास",
           noHistory: "कोई इतिहास नहीं",
           modalHeader: "सेटिंग्ज़ / भाषा",
@@ -255,8 +252,8 @@
       function updateUITexts() {
         const t = translations[currentLanguage];
         newChatBtn.textContent = t.newChat;
-        settingsBtn.textContent = t.settings;
-        document.getElementById('txtHeaderSettings').textContent = t.settings.replace(/[^a-zA-Z⚙️ सेटिङ्सं]/g, '').trim() || "Settings";
+        settingsBtn.textContent = "⚙️ " + t.settings;
+        document.getElementById('txtHeaderSettings').textContent = t.settings;
         document.getElementById('txtHistoryHeader').textContent = t.historyHeader;
         document.getElementById('txtNoHistory').textContent = t.noHistory;
         document.getElementById('txtModalHeader').textContent = t.modalHeader;
@@ -274,15 +271,27 @@
 
       updateUITexts();
 
-      function openSettings() {
+      function openSettings(e) {
+        if (e) e.preventDefault();
+        languageSelect.value = currentLanguage;
         settingsModal.classList.add('active');
         if (window.innerWidth <= 768 && sidebar.classList.contains('open')) toggleMenu();
       }
 
+      function closeSettings(e) {
+        if (e) e.preventDefault();
+        settingsModal.classList.remove('active');
+      }
+
       settingsBtn.addEventListener('click', openSettings);
       headerSettingsBtn.addEventListener('click', openSettings);
-      closeModal.addEventListener('click', () => settingsModal.classList.remove('active'));
-      settingsModal.addEventListener('click', (e) => { if (e.target === settingsModal) settingsModal.classList.remove('active'); });
+      closeModal.addEventListener('click', closeSettings);
+      
+      settingsModal.addEventListener('click', (e) => { 
+        if (e.target === settingsModal) {
+          closeSettings();
+        } 
+      });
       
       saveSettingsBtn.addEventListener('click', (e) => {
         e.preventDefault();
