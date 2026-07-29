@@ -247,6 +247,7 @@
       let currentLanguage = localStorage.getItem('nep_ai_language') || 'English';
       languageSelect.value = currentLanguage;
 
+      // Update texts globally on initial page load based on currentLanguage
       function updateUITexts() {
         const t = translations[currentLanguage];
         newChatBtn.textContent = t.newChat;
@@ -289,12 +290,14 @@
         if (e.target === settingsModal) closeSettings(); 
       };
       
+      // FIXED SAVE BUTTON: Now instantly triggers a hard refresh of the window
       saveSettingsBtn.onclick = function(e) {
         e.preventDefault();
         currentLanguage = languageSelect.value;
         localStorage.setItem('nep_ai_language', currentLanguage);
-        updateUITexts();
-        settingsModal.classList.remove('active');
+        
+        // This command flawlessly resets the UI state by reloading the page
+        window.location.reload();
       };
 
       let conversationHistory = [];
