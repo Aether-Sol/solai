@@ -378,9 +378,9 @@
           buttonElement.innerHTML = '⏹ Stop'; 
         }
 
-        // Direct Google Translate TTS endpoint (Instant playback, no popups or API keys)
-        const cleanText = text.replace(/[#*_`]/g, '').slice(0, 200);
-        const audioUrl = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(cleanText)}&tl=en&client=tw-ob`;
+        // StreamElements public TTS endpoint (Reliable, direct MP3 stream, no login/API keys)
+        const cleanText = text.replace(/[#*_`]/g, '').slice(0, 300);
+        const audioUrl = `https://api.streamelements.com/kappa/v2/speech?voice=Brian&text=${encodeURIComponent(cleanText)}`;
         
         const audio = new Audio(audioUrl);
         currentAudio = audio;
