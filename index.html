@@ -491,16 +491,26 @@
 
         if (text && !activeImage) {
           const lowerText = text.toLowerCase().trim();
-          const triggers = [
-            "create an image of", "create a image of", "create image of",
-            "create a picture of", "create picture of",
-            "create a photo of", "create photo of",
-            "image of", "picture of", "photo of"
-          ];
+          const imageKeywords = ["image", "picture", "photo", "draw", "paint", "generate", "create"];
+          const isImageIntent = imageKeywords.some(kw => lowerText.includes(kw));
 
-          let matchedTrigger = triggers.find(t => lowerText.startsWith(t));
-          if (matchedTrigger) {
-            let promptText = text.slice(matchedTrigger.length).trim();
+          if (isImageIntent) {
+            let promptText = text;
+            const prefixes = [
+              "can you make an image of", "can you create an image of", "can you draw", "can you generate",
+              "make a image of", "make an image of", "make me an image of", "make me a picture of", "make a", "make",
+              "create an image of", "create a image of", "create image of",
+              "create a picture of", "create picture of",
+              "create a photo of", "create photo of",
+              "image of", "picture of", "photo of", "draw a", "draw", "generate"
+            ];
+            
+            for (let p of prefixes) {
+              if (lowerText.startsWith(p)) {
+                promptText = text.slice(p.length).trim();
+                break;
+              }
+            }
             if (!promptText) promptText = text;
 
             appendMessageUI('user', text);
