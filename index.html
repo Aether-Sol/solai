@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
     <title>Nep AI - Professional Edition</title>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <script src="https://js.puter.com/v2/"></script>
     <style>
       /* CSS will go in Part 2 */
     </style>
@@ -57,10 +56,31 @@
         <header class="chat-header">
           <div class="header-left-group">
             <button class="menu-toggle" id="menuBtn" title="Toggle Sidebar">&#9776;</button>
-            <select class="header-model-select" id="headerModelSelect" title="Choose Model">
-              <option value="Sol-A1">🟢 Sol A1 - Standard all rounder helper (Selected)</option>
-              <option value="Sol-A2" disabled style="color: var(--text-muted);">🔴 Sol A2 - Coming Soon</option>
-            </select>
+            
+            <!-- Modern Custom Model Selector Dropdown -->
+            <div class="model-dropdown-wrapper" id="modelDropdownWrapper">
+              <button class="model-dropdown-trigger" id="modelDropdownBtn" type="button">
+                <span>⚡ Change Model</span>
+                <span class="dropdown-arrow">▾</span>
+              </button>
+              <div class="model-dropdown-menu" id="modelDropdownMenu">
+                <div class="model-option active" data-model="Sol-A1">
+                  <span class="status-dot green"></span>
+                  <div class="model-info">
+                    <div class="model-name">Sol A1</div>
+                    <div class="model-desc">Standard all rounder helper</div>
+                  </div>
+                </div>
+                <div class="model-option disabled" data-model="Sol-A2">
+                  <span class="status-dot red"></span>
+                  <div class="model-info">
+                    <div class="model-name">Sol A2</div>
+                    <div class="model-desc">Coming Soon</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <button class="header-settings-btn" id="headerSettingsBtn" type="button">⚙️ <span>Settings</span></button>
           </div>
           <div class="neon-title">Nep AI</div>
@@ -91,7 +111,8 @@
           </div>
         </div>
       </main>
-      <style>
+    </div>
+    <style>
   :root {
     --bg-deep: #0f0f10;
     --bg-surface: #1a181a;
@@ -141,12 +162,31 @@
   .menu-toggle { display: flex; align-items: center; justify-content: center; background: var(--bg-deep); border: 1px solid var(--border-color); color: var(--text-main); padding: 8px 12px; border-radius: 10px; cursor: pointer; font-size: 1.1rem; transition: background 0.2s; }
   .menu-toggle:hover { background: rgba(255, 255, 255, 0.1); }
   
-  .header-model-select { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-color); color: var(--text-main); padding: 6px 10px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; font-weight: 500; outline: none; transition: background 0.2s; }
-  .header-model-select:hover { background: rgba(255, 255, 255, 0.1); }
-  .header-model-select option { background: var(--bg-surface); color: var(--text-main); }
-  .header-model-select option:disabled { color: var(--text-muted); }
+  /* Modern Custom Model Selector Styles */
+  .model-dropdown-wrapper { position: relative; display: inline-block; }
+  .model-dropdown-trigger { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-color); color: var(--text-main); padding: 8px 14px; border-radius: 10px; cursor: pointer; font-size: 0.85rem; font-weight: 500; display: flex; align-items: center; gap: 8px; transition: all 0.2s ease; outline: none; box-shadow: 0 2px 6px rgba(0,0,0,0.2); }
+  .model-dropdown-trigger:hover { background: rgba(255, 255, 255, 0.1); border-color: var(--primary); }
+  .dropdown-arrow { font-size: 0.75rem; color: var(--text-muted); transition: transform 0.2s ease; }
+  .model-dropdown-wrapper.active .dropdown-arrow { transform: rotate(180deg); }
 
-  .header-settings-btn { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-color); color: var(--text-main); padding: 6px 12px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; font-weight: 500; display: flex; align-items: center; gap: 6px; transition: background 0.2s; }
+  .model-dropdown-menu { position: absolute; top: calc(100% + 8px); left: 0; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 14px; width: 260px; box-shadow: 0 12px 30px rgba(0,0,0,0.6); display: none; flex-direction: column; gap: 4px; padding: 8px; z-index: 1000; animation: fadeInMenu 0.2s ease; }
+  @keyframes fadeInMenu { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+  .model-dropdown-wrapper.active .model-dropdown-menu { display: flex; }
+
+  .model-option { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 10px; cursor: pointer; transition: background 0.2s; }
+  .model-option:hover:not(.disabled) { background: rgba(255, 255, 255, 0.08); }
+  .model-option.disabled { opacity: 0.5; cursor: not-allowed; }
+  .model-option.active { background: rgba(220, 38, 38, 0.12); border: 1px solid var(--border-color); }
+
+  .status-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+  .status-dot.green { background: #22c55e; box-shadow: 0 0 10px rgba(34, 197, 94, 0.8); }
+  .status-dot.red { background: #ef4444; box-shadow: 0 0 10px rgba(239, 68, 68, 0.8); }
+
+  .model-info { display: flex; flex-direction: column; gap: 2px; }
+  .model-name { font-weight: 700; font-size: 0.85rem; color: var(--text-main); }
+  .model-desc { font-size: 0.75rem; color: var(--text-muted); }
+
+  .header-settings-btn { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-color); color: var(--text-main); padding: 8px 14px; border-radius: 10px; cursor: pointer; font-size: 0.85rem; font-weight: 500; display: flex; align-items: center; gap: 6px; transition: background 0.2s; }
   .header-settings-btn:hover { background: rgba(255, 255, 255, 0.1); }
 
   .neon-title { font-size: 1.2rem; font-weight: 800; color: #fff; text-transform: uppercase; letter-spacing: 1px; text-shadow: 0 0 10px var(--accent-gold); }
@@ -208,7 +248,7 @@
     .sidebar-backdrop.active { display: block; }
   }
 </style>
-      <script>
+<script>
       const GROQ_API_KEY = "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";
       
       const menuBtn = document.getElementById('menuBtn');
@@ -226,7 +266,33 @@
       const imagePreviewContainer = document.getElementById('imagePreviewContainer');
       const selectedThumb = document.getElementById('selectedThumb');
       const removeImgBtn = document.getElementById('removeImgBtn');
-      const headerModelSelect = document.getElementById('headerModelSelect');
+      
+      // Custom Model Dropdown Elements
+      const modelDropdownWrapper = document.getElementById('modelDropdownWrapper');
+      const modelDropdownBtn = document.getElementById('modelDropdownBtn');
+      const modelOptions = document.querySelectorAll('.model-option');
+      let selectedModelId = "Sol-A1";
+
+      modelDropdownBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        modelDropdownWrapper.classList.toggle('active');
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!modelDropdownWrapper.contains(e.target)) {
+          modelDropdownWrapper.classList.remove('active');
+        }
+      });
+
+      modelOptions.forEach(opt => {
+        opt.addEventListener('click', () => {
+          if (opt.classList.contains('disabled')) return;
+          modelOptions.forEach(o => o.classList.remove('active'));
+          opt.classList.add('active');
+          selectedModelId = opt.getAttribute('data-model');
+          modelDropdownWrapper.classList.remove('active');
+        });
+      });
       
       const settingsBtn = document.getElementById('settingsBtn');
       const headerSettingsBtn = document.getElementById('headerSettingsBtn');
@@ -286,13 +352,13 @@
       });
       removeImgBtn.addEventListener('click', () => { attachedBase64Image = null; imageInput.value = ''; imagePreviewContainer.classList.remove('active'); });
     </script>
-      <script>
-      let currentAudioElement = null;
+    <script>
+      let currentAudio = null;
 
-      async function speakText(buttonElement, text, onCompleteCallback = null) {
-        if (currentAudioElement) {
-          currentAudioElement.pause();
-          currentAudioElement = null;
+      function speakText(buttonElement, text, onCompleteCallback = null) {
+        if (currentAudio) {
+          currentAudio.pause();
+          currentAudio = null;
         }
 
         if (buttonElement && buttonElement.classList.contains('speaking')) { 
@@ -309,44 +375,41 @@
 
         if (buttonElement) { 
           buttonElement.classList.add('speaking'); 
-          buttonElement.innerHTML = '⏳ Loading...'; 
+          buttonElement.innerHTML = '⏹ Stop'; 
         }
 
-        try {
-          const audio = await puter.ai.txt2speech(text);
-          currentAudioElement = audio;
+        // Direct Google Translate TTS endpoint (Instant playback, no popups or API keys)
+        const cleanText = text.replace(/[#*_`]/g, '').slice(0, 200);
+        const audioUrl = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(cleanText)}&tl=en&client=tw-ob`;
+        
+        const audio = new Audio(audioUrl);
+        currentAudio = audio;
 
-          if (buttonElement) {
-            buttonElement.innerHTML = '⏹ Stop';
-          }
-
-          audio.onended = () => {
-            if (buttonElement) {
-              buttonElement.classList.remove('speaking');
-              buttonElement.innerHTML = '🔊 Listen';
-            }
-            currentAudioElement = null;
-            if (onCompleteCallback) onCompleteCallback();
-          };
-
-          audio.onerror = () => {
-            if (buttonElement) {
-              buttonElement.classList.remove('speaking');
-              buttonElement.innerHTML = '🔊 Listen';
-            }
-            currentAudioElement = null;
-            if (onCompleteCallback) onCompleteCallback();
-          };
-
-          audio.play();
-        } catch (error) {
-          console.error("TTS Error:", error);
+        audio.play().catch(err => {
+          console.error("Audio playback error:", err);
           if (buttonElement) {
             buttonElement.classList.remove('speaking');
             buttonElement.innerHTML = '🔊 Listen';
           }
           if (onCompleteCallback) onCompleteCallback();
-        }
+        });
+
+        audio.onended = () => {
+          if (buttonElement) {
+            buttonElement.classList.remove('speaking');
+            buttonElement.innerHTML = '🔊 Listen';
+          }
+          if (currentAudio === audio) currentAudio = null;
+          if (onCompleteCallback) onCompleteCallback();
+        };
+
+        audio.onerror = () => {
+          if (buttonElement) {
+            buttonElement.classList.remove('speaking');
+            buttonElement.innerHTML = '🔊 Listen';
+          }
+          if (onCompleteCallback) onCompleteCallback();
+        };
       }
 
       function renderHistory() {
@@ -363,7 +426,7 @@
 
       function loadChat(index) {
         stopVoiceMode(); 
-        if (currentAudioElement) { currentAudioElement.pause(); currentAudioElement = null; }
+        if (currentAudio) { currentAudio.pause(); currentAudio = null; }
         if (currentAbortController) currentAbortController.abort();
         stopBtn.classList.remove('active');
         conversationHistory = [...savedConversations[index].messages];
@@ -380,7 +443,7 @@
 
       newChatBtn.addEventListener('click', () => {
         stopVoiceMode(); 
-        if (currentAudioElement) { currentAudioElement.pause(); currentAudioElement = null; }
+        if (currentAudio) { currentAudio.pause(); currentAudio = null; }
         if (currentAbortController) currentAbortController.abort();
         stopBtn.classList.remove('active');
         if (conversationHistory.length > 0) saveCurrentChatToHistory();
@@ -402,7 +465,7 @@
         renderHistory();
       }
     </script>
-      <script>
+    <script>
       async function callGroqCloudAPI(promptText, imageUrl, isVoiceLoop = false) {
         const loadingId = 'msg-' + Date.now();
         chatMessages.innerHTML += `<div class="message-wrapper assistant" id="${loadingId}"><div class="message-bubble" style="opacity: 0.7;">Thinking...</div></div>`;
@@ -531,7 +594,7 @@
       voiceModeBtn.addEventListener('click', () => {
         if (isVoiceModeActive) { stopVoiceMode(); } 
         else { 
-          if (currentAudioElement) { currentAudioElement.pause(); currentAudioElement = null; }
+          if (currentAudio) { currentAudio.pause(); currentAudio = null; }
           isVoiceModeActive = true; 
           startVoiceRecognition(); 
         }
@@ -541,4 +604,3 @@
     </script>
   </body>
 </html>
-    </div>
