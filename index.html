@@ -262,7 +262,6 @@
       const languageSelect = document.getElementById('languageSelect');
       const themeSelect = document.getElementById('themeSelect');
 
-      // Apply saved theme on startup
       let currentTheme = localStorage.getItem('nep_ai_theme') || 'theme-crimson-red';
       document.body.className = currentTheme;
       themeSelect.value = currentTheme.replace('theme-', '');
@@ -309,7 +308,6 @@
       settingsBtn.onclick = openSettings; headerSettingsBtn.onclick = openSettings; closeModal.onclick = closeSettings;
       settingsModal.onclick = (e) => { if (e.target === settingsModal) closeSettings(); };
       
-      // Save changes with clean modal hide and page refresh to apply full deep theme layout cleanly
       saveSettingsBtn.onclick = (e) => { 
         e.preventDefault(); 
         localStorage.setItem('nep_ai_language', languageSelect.value);
@@ -420,7 +418,15 @@
           let userContent = imageUrl ? [{ type: "text", text: promptText || "Analyze this image" }, { type: "image_url", image_url: { url: imageUrl } }] : promptText;
           conversationHistory.push({ role: 'user', content: userContent });
           
-          const systemInstruction = `You are Nep AI, a fluent, natural native-speaking assistant in ${currentLanguage}. Respond strictly and entirely in natural, grammatically correct, and culturally authentic ${currentLanguage}. Provide concise, conversational answers suited for spoken chat using polite second-person pronouns without reasoning steps, markdown tables, or code blocks.`;
+          // STRICT NATIVE LANGUAGE SYSTEM PROMPT TO PREVENT WEIRD HALLUCINATIONS/GLITCHES
+          let systemInstruction = '';
+          if (currentLanguage === 'Nepali') {
+            systemInstruction = `You are Nep AI, a native Nepali speaker. Respond ONLY in completely natural, fluent, everyday conversational Nepali using proper Devanagari script. Never use awkward machine translations, broken words, or weird vocabulary. Use natural conversational phrases like 'मलाई सन्चै छ, धन्यवाद। तपाईंलाई नि?' or 'तपाईंलाई कस्तो छ?'. Keep responses concise and conversational without reasoning steps, markdown tables, or code blocks.`;
+          } else if (currentLanguage === 'Hindi') {
+            systemInstruction = `You are Nep AI, a native Hindi speaker. Respond ONLY in completely natural, fluent, everyday conversational Hindi using proper Devanagari script. Never use awkward machine translations or broken words. Keep responses concise and conversational without reasoning steps, markdown tables, or code blocks.`;
+          } else {
+            systemInstruction = `You are Nep AI, a helpful, direct conversational voice assistant. Respond strictly and entirely in English. Provide concise answers suited for spoken conversation without reasoning steps, markdown tables, or code blocks.`;
+          }
 
           const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
             method: 'POST',
