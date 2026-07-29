@@ -83,7 +83,7 @@
       .message-bubble p { margin-bottom: 8px; }
       .message-bubble pre { background: var(--bg-deep); border: 1px solid var(--border-color); padding: 10px; border-radius: 8px; overflow-x: auto; margin: 8px 0; }
       .message-bubble code { font-family: monospace; background: rgba(255,255,255,0.1); padding: 2px 4px; border-radius: 4px; font-size: 0.85rem; }
-      .chat-img-preview { max-width: 200px; max-height: 200px; border-radius: 8px; margin-bottom: 8px; display: block; object-fit: cover; }
+      .chat-img-preview { max-width: 100%; border-radius: 8px; margin-top: 8px; display: block; object-fit: cover; box-shadow: 0 4px 12px rgba(0,0,0,0.5); }
       .msg-footer { display: flex; align-items: center; gap: 6px; padding: 0 4px; }
       .tts-btn { background: transparent; border: 1px solid var(--border-color); color: var(--text-muted); padding: 3px 8px; border-radius: 6px; font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; gap: 4px; }
       
@@ -114,7 +114,6 @@
       .close-modal { background: transparent; border: none; color: var(--text-muted); font-size: 1.2rem; cursor: pointer; }
       .settings-group { display: flex; flex-direction: column; gap: 4px; position: relative; }
       
-      /* Optimized Custom Animated Dropdown Menu */
       .custom-dropdown { position: relative; width: 100%; }
       .dropdown-selected { background: var(--bg-deep); border: 1px solid var(--border-color); color: var(--text-main); padding: 10px 12px; border-radius: 8px; outline: none; font-size: 0.9rem; width: 100%; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: border-color 0.2s, box-shadow 0.2s; }
       .dropdown-selected:hover { border-color: var(--primary); }
@@ -130,7 +129,6 @@
       .dropdown-options::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
 
       .save-settings-btn { background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end)); color: #fff; border: none; padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 1rem; width: 100%; text-align: center; }
-
       .sidebar-backdrop { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 99; display: none; }
       
       @media (max-width: 768px) {
@@ -145,13 +143,12 @@
     <div class="app-container" id="appContainer">
       <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
       
+      <!-- Settings Modal -->
       <div class="modal-overlay" id="settingsModal">
         <div class="modal-content">
           <div class="modal-title"><span>Settings</span><button class="close-modal" id="closeModal">&times;</button></div>
-          
           <div class="settings-group">
             <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 6px;">Appearance Theme:</div>
-            <!-- Custom Animated Dropdown -->
             <div class="custom-dropdown" id="themeCustomDropdown">
               <div class="dropdown-selected" id="themeDropdownSelected">
                 <span>Crimson Red (Default)</span>
@@ -173,7 +170,6 @@
               </div>
             </div>
           </div>
-
           <button class="save-settings-btn" id="saveSettingsBtn" type="button">Save Changes</button>
         </div>
       </div>
@@ -201,6 +197,7 @@
         </div>
       </div>
 
+      <!-- Sidebar -->
       <aside class="sidebar" id="sidebar">
         <div class="sidebar-top"><span>Nep AI</span></div>
         <div class="sidebar-actions">
@@ -217,6 +214,7 @@
         <div class="sidebar-footer">© Aayush Dc</div>
       </aside>
       
+      <!-- Main Content Area -->
       <main class="main-content">
         <header class="chat-header">
           <div class="header-left-group">
@@ -253,7 +251,6 @@
         </div>
       </main>
     </div>
-
     <script>
       const GROQ_API_KEY = "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";
       
@@ -280,7 +277,6 @@
       const closeModal = document.getElementById('closeModal');
       const saveSettingsBtn = document.getElementById('saveSettingsBtn');
 
-      // Custom Dropdown Elements
       const themeCustomDropdown = document.getElementById('themeCustomDropdown');
       const themeDropdownSelected = document.getElementById('themeDropdownSelected');
       const themeDropdownSelectedText = themeDropdownSelected.querySelector('span');
@@ -310,7 +306,6 @@
       document.body.className = currentThemeValue;
       themeDropdownSelectedText.textContent = themeNames[cleanThemeValue] || 'Crimson Red (Default)';
 
-      // Custom Dropdown Logic
       themeDropdownSelected.addEventListener('click', (e) => {
         e.stopPropagation();
         themeCustomDropdown.classList.toggle('open');
@@ -471,14 +466,53 @@
 
       function speakEncodedText(btn, b64) { speakText(btn, decodeURIComponent(escape(atob(b64)))); }
 
-      function handleSendMessage() {
-        stopVoiceMode();
-        const text = chatInput.value.trim(), activeImage = attachedBase64Image;
+      function processUserMessage(text, activeImage, isVoiceLoop = false) {
         if (!text && !activeImage) return;
+
+        if (text && !activeImage) {
+          const lowerText = text.toLowerCase().trim();
+          const triggers = [
+            "create an image of", "create a image of", "create image of",
+            "create a picture of", "create picture of",
+            "create a photo of", "create photo of",
+            "image of", "picture of", "photo of"
+          ];
+
+          let matchedTrigger = triggers.find(t => lowerText.startsWith(t));
+          if (matchedTrigger) {
+            let promptText = text.slice(matchedTrigger.length).trim();
+            if (!promptText) promptText = text;
+
+            appendMessageUI('user', text);
+            chatInput.value = ''; chatInput.style.height = 'auto';
+
+            const encodedPrompt = encodeURIComponent(promptText);
+            const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}`;
+
+            let aiReplyText = `Here is the image for "${promptText}":`;
+            conversationHistory.push({ role: 'user', content: text });
+            conversationHistory.push({ role: 'assistant', content: aiReplyText + "\n\n![Generated Image](" + imageUrl + ")" });
+
+            appendMessageUI('assistant', aiReplyText, imageUrl);
+            saveCurrentChatToHistory();
+
+            if (isVoiceLoop && isVoiceModeActive) {
+              speakText(null, `Here is the image for ${promptText}`, () => { if (isVoiceModeActive) startVoiceRecognition(); });
+            }
+            return;
+          }
+        }
+
         appendMessageUI('user', text || 'Sent an image', activeImage);
         chatInput.value = ''; chatInput.style.height = 'auto';
         attachedBase64Image = null; imageInput.value = ''; imagePreviewContainer.classList.remove('active');
-        callGroqCloudAPI(text, activeImage, false);
+        callGroqCloudAPI(text, activeImage, isVoiceLoop);
+      }
+
+      function handleSendMessage() {
+        stopVoiceMode();
+        const text = chatInput.value.trim(), activeImage = attachedBase64Image;
+        processUserMessage(text, activeImage, false);
       }
 
       sendBtn.addEventListener('click', handleSendMessage);
@@ -497,8 +531,7 @@
         rec.onresult = (event) => {
           const spokenText = event.results[0][0].transcript.trim();
           if (spokenText && isVoiceModeActive) {
-            appendMessageUI('user', spokenText);
-            callGroqCloudAPI(spokenText, null, true);
+            processUserMessage(spokenText, null, true);
           }
         };
         rec.onerror = (event) => {
@@ -599,6 +632,9 @@
           if (Array.isArray(msg.content)) {
             content = msg.content.find(c => c.type === 'text')?.text || '';
             img = msg.content.find(c => c.type === 'image_url')?.image_url.url || null;
+          } else if (typeof msg.content === 'string' && msg.content.includes('![](')) {
+            const match = msg.content.match(/!\[.*?\]\((.*?)\)/);
+            if (match) img = match[1];
           }
           appendMessageUI(msg.role === 'user' ? 'user' : 'assistant', content, img);
         });
