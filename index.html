@@ -35,9 +35,20 @@
       body.theme-solarized-lime { --bg-deep: #080d02; --bg-surface: #141f04; --primary: #84cc16; --accent-gold: #ecfccb; --border-color: rgba(132, 204, 22, 0.4); --gradient-start: #84cc16; --gradient-end: #4d7c0f; --msg-user: linear-gradient(135deg, #84cc16, #3f6212); --glow-shadow: 0 0 25px rgba(132, 204, 22, 0.35); }
       body.theme-pure-monochrome { --bg-deep: #070709; --bg-surface: #121217; --primary: #a1a1aa; --accent-gold: #f4f4f5; --border-color: rgba(161, 161, 170, 0.35); --gradient-start: #71717a; --gradient-end: #3f3f46; --msg-user: linear-gradient(135deg, #52525b, #27272a); --glow-shadow: 0 0 25px rgba(113, 113, 122, 0.25); }
 
-      /* Optimized Flower Animation Styles */
-      .flower-drop { position: fixed; top: -10vh; z-index: 9999; user-select: none; pointer-events: none; animation: fall linear forwards; will-change: transform; filter: drop-shadow(0 0 4px rgba(255,255,255,0.3)); }
-      @keyframes fall { to { transform: translateY(115vh) rotate(360deg); } }
+      /* Optimized Colorful Droplets Animation Styles */
+      .droplet {
+        position: fixed;
+        top: -20px;
+        z-index: 9999;
+        user-select: none;
+        pointer-events: none;
+        border-radius: 50%;
+        animation: droplet-fall linear forwards;
+        will-change: transform;
+      }
+      @keyframes droplet-fall {
+        to { transform: translateY(112vh); }
+      }
 
       * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
       html, body { background-color: var(--bg-deep); color: var(--text-main); width: 100%; height: 100%; height: 100dvh; overflow: hidden; font-size: 15px; transition: background 0.3s ease; }
@@ -91,7 +102,6 @@
       .message-bubble code { font-family: monospace; background: rgba(255,255,255,0.1); padding: 2px 4px; border-radius: 4px; font-size: 0.85rem; }
       .chat-img-preview { max-width: 200px; max-height: 200px; border-radius: 8px; margin-bottom: 8px; display: block; object-fit: cover; border: 1px solid var(--border-color); }
       
-      /* Direct Download Button for Generated Images */
       .image-download-btn { display: inline-flex; align-items: center; gap: 6px; background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end)); color: #fff; border: none; padding: 7px 14px; border-radius: 8px; font-size: 0.8rem; font-weight: 600; cursor: pointer; margin-top: 10px; box-shadow: var(--glow-shadow); transition: transform 0.2s, filter 0.2s; }
       .image-download-btn:hover { filter: brightness(1.15); transform: translateY(-1px); }
 
@@ -128,7 +138,6 @@
       .close-modal { background: transparent; border: none; color: var(--text-muted); font-size: 1.2rem; cursor: pointer; }
       .settings-group { display: flex; flex-direction: column; gap: 4px; position: relative; }
       
-      /* Custom Animated Dropdown Menu */
       .custom-dropdown { position: relative; width: 100%; }
       .dropdown-selected { background: var(--bg-deep); border: 1px solid var(--border-color); color: var(--text-main); padding: 10px 12px; border-radius: 9px; outline: none; font-size: 0.9rem; width: 100%; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: border-color 0.2s, box-shadow 0.2s; }
       .dropdown-selected:hover { border-color: var(--primary); }
@@ -166,7 +175,6 @@
           
           <div class="settings-group">
             <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 6px;">Appearance Theme:</div>
-            <!-- Custom Animated Dropdown -->
             <div class="custom-dropdown" id="themeCustomDropdown">
               <div class="dropdown-selected" id="themeDropdownSelected">
                 <span>Crimson Red (Default)</span>
@@ -193,7 +201,6 @@
         </div>
       </div>
 
-      <!-- Select Model Modal -->
       <div class="modal-overlay" id="modelModal">
         <div class="modal-content">
           <div class="modal-title"><span>Select Model</span><button class="close-modal" id="closeModelModal">&times;</button></div>
@@ -303,19 +310,28 @@
       const modelModal = document.getElementById('modelModal');
       const closeModelModal = document.getElementById('closeModelModal');
 
-      // Optimized Flower Raining Animation Logic (capped at max 12 items to eliminate lag)
-      function createFlower() {
-        if (document.querySelectorAll('.flower-drop').length > 12) return;
-        const flower = document.createElement('div');
-        flower.innerHTML = ['🌸', '🌺', '🌼', '🌷', '✨'][Math.floor(Math.random() * 5)];
-        flower.className = 'flower-drop';
-        flower.style.left = Math.random() * 100 + 'vw';
-        flower.style.fontSize = (Math.random() * 1.2 + 0.8) + 'rem';
-        flower.style.animationDuration = (Math.random() * 3 + 4) + 's';
-        document.body.appendChild(flower);
-        setTimeout(() => flower.remove(), 7000);
+      // Optimized Colorful Droplets Raining Logic (capped max elements to prevent lag)
+      function createDroplet() {
+        if (document.querySelectorAll('.droplet').length > 15) return;
+        const droplet = document.createElement('div');
+        droplet.className = 'droplet';
+        droplet.style.left = Math.random() * 100 + 'vw';
+        
+        const colors = ['var(--primary)', 'var(--accent-gold)', '#38bdf8', '#34d399', '#f472b6', '#a855f7'];
+        const chosenColor = colors[Math.floor(Math.random() * colors.length)];
+        droplet.style.background = `linear-gradient(to bottom, rgba(255,255,255,0.95), ${chosenColor})`;
+        droplet.style.boxShadow = `0 0 8px ${chosenColor}`;
+        
+        const width = Math.random() * 2 + 2; // 2px to 4px width
+        const height = Math.random() * 8 + 10; // 10px to 18px height
+        droplet.style.width = width + 'px';
+        droplet.style.height = height + 'px';
+        
+        droplet.style.animationDuration = (Math.random() * 2 + 3) + 's';
+        document.body.appendChild(droplet);
+        setTimeout(() => droplet.remove(), 5500);
       }
-      setInterval(createFlower, 800);
+      setInterval(createDroplet, 300);
 
       const themeNames = {
         'crimson-red': 'Crimson Red (Default)',
@@ -418,7 +434,6 @@
       });
       removeImgBtn.addEventListener('click', () => { attachedBase64Image = null; imageInput.value = ''; imagePreviewContainer.classList.remove('active'); });
 
-      // Direct Blob Image Download Function (No redirects)
       async function downloadGeneratedImage(url) {
         try {
           const response = await fetch(url);
@@ -518,7 +533,6 @@
         const text = chatInput.value.trim(), activeImage = attachedBase64Image;
         if (!text && !activeImage) return;
 
-        // Pollinations AI Generation Logic
         const lowerText = text.toLowerCase();
         const imageTriggers = ['create', 'make', 'generate', 'genrate', 'image', 'photo', 'pic', 'picture'];
         const isImageRequest = imageTriggers.some(word => lowerText.includes(word));
@@ -548,7 +562,6 @@
           return;
         }
 
-        // Standard Text/Image Upload Logic
         appendMessageUI('user', text || 'Sent an image', activeImage);
         chatInput.value = ''; chatInput.style.height = 'auto';
         attachedBase64Image = null; imageInput.value = ''; imagePreviewContainer.classList.remove('active');
