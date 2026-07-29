@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
     <title>Nep AI - Professional Edition</title>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://js.puter.com/v2/"></script>
     <style>
       /* CSS will go in Part 2 */
     </style>
@@ -57,8 +58,8 @@
           <div class="header-left-group">
             <button class="menu-toggle" id="menuBtn" title="Toggle Sidebar">&#9776;</button>
             <select class="header-model-select" id="headerModelSelect" title="Choose Model">
-              <option value="Sol-A1">Sol A1 - Standard all rounder helper (Selected)</option>
-              <option value="Sol-A2" disabled style="color: var(--text-muted);">Sol A2 - Coming Soon</option>
+              <option value="Sol-A1">🟢 Sol A1 - Standard all rounder helper (Selected)</option>
+              <option value="Sol-A2" disabled style="color: var(--text-muted);">🔴 Sol A2 - Coming Soon</option>
             </select>
             <button class="header-settings-btn" id="headerSettingsBtn" type="button">⚙️ <span>Settings</span></button>
           </div>
@@ -90,8 +91,7 @@
           </div>
         </div>
       </main>
-    </div>
-    <style>
+      <style>
   :root {
     --bg-deep: #0f0f10;
     --bg-surface: #1a181a;
@@ -208,7 +208,7 @@
     .sidebar-backdrop.active { display: block; }
   }
 </style>
-<script>
+      <script>
       const GROQ_API_KEY = "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";
       
       const menuBtn = document.getElementById('menuBtn');
@@ -286,23 +286,67 @@
       });
       removeImgBtn.addEventListener('click', () => { attachedBase64Image = null; imageInput.value = ''; imagePreviewContainer.classList.remove('active'); });
     </script>
-    <script>
-      function speakText(buttonElement, text, onCompleteCallback = null) {
-        if (!('speechSynthesis' in window)) { if (onCompleteCallback) onCompleteCallback(); return; }
-        window.speechSynthesis.cancel();
-        if (buttonElement && buttonElement.classList.contains('speaking')) { 
-          buttonElement.classList.remove('speaking'); buttonElement.innerHTML = '🔊 Listen'; 
-          if (onCompleteCallback) onCompleteCallback(); return; 
-        }
-        document.querySelectorAll('.tts-btn').forEach(btn => { btn.classList.remove('speaking'); btn.innerHTML = '🔊 Listen'; });
-        
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = 'en-US';
+      <script>
+      let currentAudioElement = null;
 
-        if (buttonElement) { buttonElement.classList.add('speaking'); buttonElement.innerHTML = '⏹ Stop'; }
-        utterance.onend = () => { if (buttonElement) { buttonElement.classList.remove('speaking'); buttonElement.innerHTML = '🔊 Listen'; } if (onCompleteCallback) onCompleteCallback(); };
-        utterance.onerror = () => { if (buttonElement) { buttonElement.classList.remove('speaking'); buttonElement.innerHTML = '🔊 Listen'; } if (onCompleteCallback) onCompleteCallback(); };
-        window.speechSynthesis.speak(utterance);
+      async function speakText(buttonElement, text, onCompleteCallback = null) {
+        if (currentAudioElement) {
+          currentAudioElement.pause();
+          currentAudioElement = null;
+        }
+
+        if (buttonElement && buttonElement.classList.contains('speaking')) { 
+          buttonElement.classList.remove('speaking'); 
+          buttonElement.innerHTML = '🔊 Listen'; 
+          if (onCompleteCallback) onCompleteCallback(); 
+          return; 
+        }
+
+        document.querySelectorAll('.tts-btn').forEach(btn => { 
+          btn.classList.remove('speaking'); 
+          btn.innerHTML = '🔊 Listen'; 
+        });
+
+        if (buttonElement) { 
+          buttonElement.classList.add('speaking'); 
+          buttonElement.innerHTML = '⏳ Loading...'; 
+        }
+
+        try {
+          const audio = await puter.ai.txt2speech(text);
+          currentAudioElement = audio;
+
+          if (buttonElement) {
+            buttonElement.innerHTML = '⏹ Stop';
+          }
+
+          audio.onended = () => {
+            if (buttonElement) {
+              buttonElement.classList.remove('speaking');
+              buttonElement.innerHTML = '🔊 Listen';
+            }
+            currentAudioElement = null;
+            if (onCompleteCallback) onCompleteCallback();
+          };
+
+          audio.onerror = () => {
+            if (buttonElement) {
+              buttonElement.classList.remove('speaking');
+              buttonElement.innerHTML = '🔊 Listen';
+            }
+            currentAudioElement = null;
+            if (onCompleteCallback) onCompleteCallback();
+          };
+
+          audio.play();
+        } catch (error) {
+          console.error("TTS Error:", error);
+          if (buttonElement) {
+            buttonElement.classList.remove('speaking');
+            buttonElement.innerHTML = '🔊 Listen';
+          }
+          if (onCompleteCallback) onCompleteCallback();
+        }
       }
 
       function renderHistory() {
@@ -318,7 +362,8 @@
       }
 
       function loadChat(index) {
-        stopVoiceMode(); window.speechSynthesis.cancel();
+        stopVoiceMode(); 
+        if (currentAudioElement) { currentAudioElement.pause(); currentAudioElement = null; }
         if (currentAbortController) currentAbortController.abort();
         stopBtn.classList.remove('active');
         conversationHistory = [...savedConversations[index].messages];
@@ -334,7 +379,8 @@
       }
 
       newChatBtn.addEventListener('click', () => {
-        stopVoiceMode(); window.speechSynthesis.cancel();
+        stopVoiceMode(); 
+        if (currentAudioElement) { currentAudioElement.pause(); currentAudioElement = null; }
         if (currentAbortController) currentAbortController.abort();
         stopBtn.classList.remove('active');
         if (conversationHistory.length > 0) saveCurrentChatToHistory();
@@ -356,7 +402,7 @@
         renderHistory();
       }
     </script>
-    <script>
+      <script>
       async function callGroqCloudAPI(promptText, imageUrl, isVoiceLoop = false) {
         const loadingId = 'msg-' + Date.now();
         chatMessages.innerHTML += `<div class="message-wrapper assistant" id="${loadingId}"><div class="message-bubble" style="opacity: 0.7;">Thinking...</div></div>`;
@@ -484,10 +530,15 @@
 
       voiceModeBtn.addEventListener('click', () => {
         if (isVoiceModeActive) { stopVoiceMode(); } 
-        else { window.speechSynthesis.cancel(); isVoiceModeActive = true; startVoiceRecognition(); }
+        else { 
+          if (currentAudioElement) { currentAudioElement.pause(); currentAudioElement = null; }
+          isVoiceModeActive = true; 
+          startVoiceRecognition(); 
+        }
       });
 
       renderHistory();
     </script>
   </body>
 </html>
+    </div>
