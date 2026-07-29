@@ -453,13 +453,33 @@
       function appendMessageUI(sender, text, imageUrl = null) {
         const welcomeHero = document.getElementById('welcomeHero');
         if (welcomeHero) welcomeHero.remove();
-        let footerHtml = '', imageHtml = imageUrl ? `<img src="${imageUrl}" class="chat-img-preview" alt="Image" />` : '';
-        let formattedContent = sender === 'user' ? `${imageHtml}<p>${(text || '').replace(/</g, "&lt;")}</p>` : marked.parse(text || '');
-        if (sender !== 'user') {
-          const tempDiv = document.createElement('div'); tempDiv.innerHTML = formattedContent;
-          const encodedText = btoa(unescape(encodeURIComponent(tempDiv.textContent || tempDiv.innerText || '')));
-          footerHtml = `<div class="msg-footer"><button class="tts-btn" onclick="speakEncodedText(this, '${encodedText}')">🔊 Listen</button></div>`;
+
+        let imgUrlToUse = imageUrl;
+        if (!imgUrlToUse && typeof text === 'string') {
+          const match = text.match(/!\[.*?\]\((.*?)\)/);
+          if (match) imgUrlToUse = match[1];
         }
+
+        let imageHtml = imgUrlToUse ? `<img src="${imgUrlToUse}" class="chat-img-preview" alt="Generated Image" />` : '';
+        let formattedContent = '';
+
+        if (sender === 'user') {
+          formattedContent = `${imageHtml}<p>${(text || '').replace(/</g, "&lt;")}</p>`;
+        } else {
+          let cleanText = text ? text.replace(/!\[.*?\]\(.*?\)/g, '').trim() : '';
+          formattedContent = marked.parse(cleanText) + imageHtml;
+        }
+
+        let footerHtml = '';
+        if (sender !== 'user') {
+          const tempDiv = document.createElement('div'); 
+          tempDiv.innerHTML = formattedContent;
+          const encodedText = btoa(unescape(encodeURIComponent(tempDiv.textContent || tempDiv.innerText || '')));
+          
+          let downloadBtnHtml = imgUrlToUse ? `<a href="${imgUrlToUse}" target="_blank" download="nep-ai-image.jpg" class="tts-btn" style="text-decoration:none;">📥 Download</a>` : '';
+          footerHtml = `<div class="msg-footer"><button class="tts-btn" onclick="speakEncodedText(this, '${encodedText}')">🔊 Listen</button>${downloadBtnHtml}</div>`;
+        }
+
         chatMessages.innerHTML += `<div class="message-wrapper ${sender}"><div class="message-bubble">${formattedContent}</div>${footerHtml}</div>`;
         chatMessages.scrollTop = chatMessages.scrollHeight;
       }
@@ -569,7 +589,7 @@
           buttonElement.classList.remove('speaking'); buttonElement.innerHTML = '🔊 Listen'; 
           if (onCompleteCallback) onCompleteCallback(); return; 
         }
-        document.querySelectorAll('.tts-btn').forEach(btn => { btn.classList.remove('speaking'); btn.innerHTML = '🔊 Listen'; });
+        document.querySelectorAll('.tts-btn').forEach(btn => { if(!btn.textContent.includes('Download')) { btn.classList.remove('speaking'); btn.innerHTML = '🔊 Listen'; } });
         
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.lang = 'en-US';
