@@ -3,77 +3,70 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nep AI - Professional Edition</title>
+  <title>Nep AI</title>
   <style>
     :root {
-      --bg-main: #0d0e12;
-      --bg-sidebar: #13151a;
-      --bg-panel: #181b22;
-      --bg-hover: #222631;
-      --border-color: #2a2e39;
-      --text-main: #f3f4f6;
-      --text-muted: #9ca3af;
-      --accent: #6366f1;
-      --accent-hover: #4f46e5;
-      --danger: #ef4444;
-      --user-bubble: #222631;
-      --ai-bubble: #181b22;
+      --bg-main: #1e1e2f;
+      --bg-sidebar: #151522;
+      --bg-panel: #27293d;
+      --bg-hover: #32344a;
+      --border-color: #383c56;
+      --text-main: #ffffff;
+      --text-muted: #a0a5cbd0;
+      --accent: #5e72e4;
+      --accent-hover: #4863c9;
+      --danger: #f5365c;
+      --success: #2dce89;
+      --user-bubble: #313348;
+      --ai-bubble: #27293d;
     }
 
-    [data-theme="neon-blue"] { --accent: #00f0ff; --accent-hover: #00adb5; }
-    [data-theme="emerald"] { --accent: #10b981; --accent-hover: #059669; }
-    [data-theme="crimson"] { --accent: #f43f5e; --accent-hover: #e11d48; }
-    [data-theme="cyberpunk"] { --accent: #facc15; --accent-hover: #eab308; }
-    [data-theme="purple"] { --accent: #a855f7; --accent-hover: #9333ea; }
-    [data-theme="monochrome"] { --accent: #ffffff; --accent-hover: #d1d5db; --user-bubble: #262626; --ai-bubble: #171717; }
-    [data-theme="sunset"] { --accent: #fb923c; --accent-hover: #f97316; }
-    [data-theme="mint"] { --accent: #2dd4bf; --accent-hover: #14b8a6; }
-    [data-theme="rose"] { --accent: #fb7185; --accent-hover: #f43f5e; }
-    [data-theme="matrix"] { --accent: #22c55e; --accent-hover: #16a34a; }
-    [data-theme="royal"] { --accent: #3b82f6; --accent-hover: #2563eb; }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     body { background-color: var(--bg-main); color: var(--text-main); height: 100vh; display: flex; overflow: hidden; }
 
     /* Sidebar */
-    .sidebar { width: 280px; min-width: 280px; background-color: var(--bg-sidebar); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; transition: transform 0.3s ease; z-index: 100; height: 100vh; }
+    .sidebar { width: 260px; background-color: var(--bg-sidebar); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; transition: transform 0.3s ease; z-index: 100; }
     .sidebar-header { padding: 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-color); }
     .new-chat-btn { flex: 1; background-color: var(--accent); color: #fff; border: none; padding: 10px 14px; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background 0.2s; }
     .new-chat-btn:hover { background-color: var(--accent-hover); }
     .history-list { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 6px; }
-    .history-item { padding: 10px 12px; border-radius: 6px; font-size: 0.85rem; color: var(--text-muted); cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: background 0.2s, color 0.2s; width: 100%; }
+    .history-item { padding: 10px 12px; border-radius: 6px; font-size: 0.85rem; color: var(--text-muted); cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: background 0.2s, color 0.2s; }
     .history-item:hover { background-color: var(--bg-hover); color: var(--text-main); }
     
     /* Main Content Area */
-    .main-content { flex: 1; display: flex; flex-direction: column; height: 100vh; position: relative; background-color: var(--bg-main); overflow: hidden; }
-    .top-nav { height: 60px; min-height: 60px; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; background-color: var(--bg-sidebar); }
+    .main-content { flex: 1; display: flex; flex-direction: column; height: 100vh; position: relative; background-color: var(--bg-main); }
+    .top-nav { height: 60px; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; background-color: var(--bg-sidebar); }
     .nav-left, .nav-right { display: flex; align-items: center; gap: 12px; }
     .icon-btn { background: none; border: none; color: var(--text-main); cursor: pointer; font-size: 1.2rem; padding: 6px; border-radius: 6px; display: flex; align-items: center; justify-content: center; }
     .icon-btn:hover { background-color: var(--bg-hover); }
     
-    /* Model Selector Dropdown */
+    /* Model Selector Dropdown & Status Lights */
     .dropdown { position: relative; display: inline-block; }
     .dropdown-btn { background: var(--bg-panel); border: 1px solid var(--border-color); color: var(--text-main); padding: 8px 14px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; }
     .dropdown-content { display: none; position: absolute; top: 100%; left: 0; margin-top: 4px; background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 8px; min-width: 180px; box-shadow: 0 10px 25px rgba(0,0,0,0.4); z-index: 10; }
     .dropdown-content.show { display: block; }
-    .dropdown-item { padding: 10px 14px; font-size: 0.85rem; color: var(--text-main); cursor: pointer; display: flex; align-items: center; justify-content: space-between; }
+    .dropdown-item { padding: 10px 14px; font-size: 0.85rem; color: var(--text-main); cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
     .dropdown-item:hover { background: var(--bg-hover); }
     .dropdown-item.active { color: var(--accent); font-weight: bold; }
+    
+    .status-light { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+    .status-light.online { background-color: var(--success); box-shadow: 0 0 6px var(--success); }
+    .status-light.offline { background-color: var(--danger); box-shadow: 0 0 6px var(--danger); }
 
     /* Chat Messages Container */
-    .chat-messages { flex: 1; overflow-y: auto; padding: 24px; display: flex; flex-direction: column; gap: 20px; scroll-behavior: smooth; width: 100%; max-width: 900px; margin: 0 auto; }
+    .chat-messages { flex: 1; overflow-y: auto; padding: 24px; display: flex; flex-direction: column; gap: 20px; scroll-behavior: smooth; }
     .welcome-hero { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center; gap: 12px; color: var(--text-muted); }
     .welcome-hero h1 { font-size: 2.2rem; color: var(--text-main); font-weight: 800; }
 
-    .message { display: flex; flex-direction: column; max-width: 75%; animation: fadeIn 0.3s ease; width: fit-content; }
+    .message { display: flex; flex-direction: column; max-width: 75%; animation: fadeIn 0.3s ease; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-    .message.user { align-self: flex-end; margin-left: auto; }
-    .message.assistant { align-self: flex-start; margin-right: auto; }
+    .message.user { align-self: flex-end; }
+    .message.assistant { align-self: flex-start; }
     
     .message-bubble { padding: 14px 18px; border-radius: 12px; font-size: 0.95rem; line-height: 1.5; word-break: break-word; }
     .message.user .message-bubble { background-color: var(--user-bubble); color: var(--text-main); border-bottom-right-radius: 4px; }
     .message.assistant .message-bubble { background-color: var(--ai-bubble); border: 1px solid var(--border-color); color: var(--text-main); border-bottom-left-radius: 4px; }
-    .message img { max-width: 250px; border-radius: 8px; margin-bottom: 8px; border: 1px solid var(--border-color); display: block; }
+    .message img { max-width: 250px; border-radius: 8px; margin-bottom: 8px; border: 1px solid var(--border-color); }
 
     .message-actions { display: flex; gap: 10px; margin-top: 6px; font-size: 0.75rem; }
     .tts-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; gap: 4px; padding: 2px 6px; border-radius: 4px; }
@@ -81,7 +74,7 @@
     .tts-btn.speaking { color: var(--accent); font-weight: bold; }
 
     /* Input Area */
-    .input-container-wrapper { padding: 16px 24px 24px; background: linear-gradient(to top, var(--bg-main) 80%, transparent); width: 100%; max-width: 900px; margin: 0 auto; }
+    .input-container-wrapper { padding: 16px 24px 24px; background: linear-gradient(to top, var(--bg-main) 80%, transparent); }
     .input-box { background-color: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 14px; padding: 12px 16px; display: flex; flex-direction: column; gap: 10px; box-shadow: 0 8px 20px rgba(0,0,0,0.2); transition: border-color 0.2s; }
     .input-box:focus-within { border-color: var(--accent); }
     
@@ -98,25 +91,8 @@
     .action-icon-btn.active { color: #fff; background-color: var(--danger); animation: pulse 1.5s infinite; }
     @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.08); } 100% { transform: scale(1); } }
     
-    .send-btn { background-color: var(--accent); color: #fff; border: none; width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background 0.2s; min-width: 36px; }
+    .send-btn { background-color: var(--accent); color: #fff; border: none; width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background 0.2s; }
     .send-btn:hover { background-color: var(--accent-hover); }
-
-    /* Settings Modal */
-    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 1000; }
-    .modal-overlay.show { display: flex; }
-    .modal { background: var(--bg-sidebar); border: 1px solid var(--border-color); border-radius: 14px; width: 420px; max-width: 90%; padding: 24px; display: flex; flex-direction: column; gap: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
-    .modal-header { display: flex; align-items: center; justify-content: space-between; font-size: 1.1rem; font-weight: bold; }
-    .modal-section { display: flex; flex-direction: column; gap: 10px; }
-    .modal-section label { font-size: 0.85rem; color: var(--text-muted); font-weight: 600; }
-    .theme-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
-    .theme-option { padding: 10px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-panel); color: var(--text-main); font-size: 0.75rem; font-weight: 600; cursor: pointer; text-align: center; transition: border-color 0.2s; }
-    .theme-option:hover { border-color: var(--accent); }
-    
-    .api-key-input { background: var(--bg-panel); border: 1px solid var(--border-color); color: var(--text-main); padding: 10px; border-radius: 8px; font-size: 0.85rem; outline: none; }
-    .api-key-input:focus { border-color: var(--accent); }
-    
-    .close-modal-btn { background: var(--bg-panel); border: 1px solid var(--border-color); color: var(--text-main); padding: 10px; border-radius: 8px; font-weight: 600; cursor: pointer; width: 100%; transition: background 0.2s; }
-    .close-modal-btn:hover { background: var(--bg-hover); }
 
     @media(max-width: 768px) {
       .sidebar { position: absolute; height: 100%; transform: translateX(-100%); }
@@ -134,7 +110,7 @@
       </button>
     </div>
     <div class="history-list" id="historyList">
-      <div style="color: var(--text-muted); font-size: 0.8rem; padding: 8px;">No recent chats</div>
+      <div style="color: var(--text-muted); font-size: 0.8rem;">No recent chats</div>
     </div>
   </div>
 
@@ -145,17 +121,17 @@
         <button class="icon-btn" id="menuToggleBtn">☰</button>
         <div class="dropdown">
           <button class="dropdown-btn" id="dropdownBtn">
-            <span id="currentModelLabel">Sol-A1 (Groq)</span> ▾
+            <span id="currentModelLabel">Sol 1</span> ▾
           </button>
           <div class="dropdown-content" id="dropdownContent">
-            <div class="dropdown-item active" data-model="qwen/qwen3.6-27b">Sol-A1 (Groq)</div>
-            <div class="dropdown-item" data-model="llama-3.3-70b-versatile">Llama 3.3 70B</div>
-            <div class="dropdown-item" data-model="mixtral-8x7b-32768">Mixtral 8x7b</div>
+            <div class="dropdown-item active" data-model="qwen/qwen3.6-27b">
+              <span>Sol 1</span> <span class="status-light online" title="Online"></span>
+            </div>
+            <div class="dropdown-item" data-model="llama-3.3-70b-versatile">
+              <span>Sol 2</span> <span class="status-light online" title="Online"></span>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="nav-right">
-        <button class="icon-btn" id="settingsBtn" title="Settings">⚙️</button>
       </div>
     </div>
 
@@ -188,41 +164,10 @@
     </div>
   </div>
 
-  <!-- Settings Modal -->
-  <div class="modal-overlay" id="settingsModal">
-    <div class="modal">
-      <div class="modal-header">
-        <span>Settings</span>
-        <button class="icon-btn" id="closeModalIcon">✕</button>
-      </div>
-      <div class="modal-section">
-        <label>Groq API Key</label>
-        <input type="password" class="api-key-input" id="apiKeyInput" placeholder="gsk_...">
-      </div>
-      <div class="modal-section">
-        <label>Aesthetic Theme</label>
-        <div class="theme-grid">
-          <div class="theme-option" data-theme="default">Default</div>
-          <div class="theme-option" data-theme="neon-blue">Neon Blue</div>
-          <div class="theme-option" data-theme="emerald">Emerald</div>
-          <div class="theme-option" data-theme="crimson">Crimson</div>
-          <div class="theme-option" data-theme="cyberpunk">Cyberpunk</div>
-          <div class="theme-option" data-theme="purple">Purple</div>
-          <div class="theme-option" data-theme="monochrome">Monochrome</div>
-          <div class="theme-option" data-theme="sunset">Sunset</div>
-          <div class="theme-option" data-theme="mint">Mint</div>
-          <div class="theme-option" data-theme="rose">Rose</div>
-          <div class="theme-option" data-theme="matrix">Matrix</div>
-          <div class="theme-option" data-theme="royal">Royal</div>
-        </div>
-      </div>
-      <button class="close-modal-btn" id="saveSettingsBtn">Save Settings</button>
-    </div>
-  </div>
-
   <script>
-    const DEFAULT_GROQ_KEY = "gsk_..." 
-    let groqApiKey = localStorage.getItem('nep_ai_groq_key') || DEFAULT_GROQ_KEY;
+    // HARDCODED API KEY AS REQUESTED
+    const GROQ_API_KEY = "gsk_your_actual_api_key_here"; 
+
     let selectedModel = "qwen/qwen3.6-27b";
     let conversationHistory = [];
     let savedConversations = JSON.parse(localStorage.getItem('nep_ai_chat_history') || '[]');
@@ -247,15 +192,8 @@
     const imagePreviewThumb = document.getElementById('imagePreviewThumb');
     const removeImageBtn = document.getElementById('removeImageBtn');
     const voiceModeBtn = document.getElementById('voiceModeBtn');
-    const settingsBtn = document.getElementById('settingsBtn');
-    const settingsModal = document.getElementById('settingsModal');
-    const closeModalIcon = document.getElementById('closeModalIcon');
-    const saveSettingsBtn = document.getElementById('saveSettingsBtn');
-    const apiKeyInput = document.getElementById('apiKeyInput');
     const historyList = document.getElementById('historyList');
     const newChatBtn = document.getElementById('newChatBtn');
-
-    apiKeyInput.value = groqApiKey === DEFAULT_GROQ_KEY ? '' : groqApiKey;
 
     menuToggleBtn.addEventListener('click', () => sidebar.classList.toggle('open'));
 
@@ -263,9 +201,10 @@
     document.querySelectorAll('.dropdown-item').forEach(item => {
       item.addEventListener('click', (e) => {
         document.querySelectorAll('.dropdown-item').forEach(i => i.classList.remove('active'));
-        e.target.classList.add('active');
-        selectedModel = e.target.getAttribute('data-model');
-        currentModelLabel.textContent = e.target.textContent;
+        const targetItem = e.currentTarget;
+        targetItem.classList.add('active');
+        selectedModel = targetItem.getAttribute('data-model');
+        currentModelLabel.textContent = targetItem.querySelector('span').textContent;
         dropdownContent.classList.remove('show');
       });
     });
@@ -273,31 +212,6 @@
       if (!dropdownBtn.contains(e.target) && !dropdownContent.contains(e.target)) {
         dropdownContent.classList.remove('show');
       }
-    });
-
-    settingsBtn.addEventListener('click', () => settingsModal.classList.add('show'));
-    closeModalIcon.addEventListener('click', () => settingsModal.classList.remove('show'));
-    saveSettingsBtn.addEventListener('click', () => {
-      if (apiKeyInput.value.trim()) {
-        groqApiKey = apiKeyInput.value.trim();
-        localStorage.setItem('nep_ai_groq_key', groqApiKey);
-      }
-      settingsModal.classList.remove('show');
-    });
-
-    const savedTheme = localStorage.getItem('nep_ai_theme') || 'default';
-    if (savedTheme !== 'default') document.documentElement.setAttribute('data-theme', savedTheme);
-    document.querySelectorAll('.theme-option').forEach(opt => {
-      opt.addEventListener('click', () => {
-        const theme = opt.getAttribute('data-theme');
-        if (theme === 'default') {
-          document.documentElement.removeAttribute('data-theme');
-          localStorage.removeItem('nep_ai_theme');
-        } else {
-          document.documentElement.setAttribute('data-theme', theme);
-          localStorage.setItem('nep_ai_theme', theme);
-        }
-      });
     });
 
     attachBtn.addEventListener('click', () => imageInput.click());
@@ -324,7 +238,7 @@
       this.style.height = (this.scrollHeight) + 'px';
     });
 
-    // Robust Blob TTS implementation with error catch feedback
+    // ROBUST BLOB TTS LOGIC
     async function speakText(buttonElement, text, onCompleteCallback = null) {
       if (currentAudio) {
         currentAudio.pause();
@@ -365,7 +279,7 @@
           console.error("Audio playback error:", err);
           if (buttonElement) {
             buttonElement.classList.remove('speaking');
-            buttonElement.innerHTML = '🔊 Listen (Error)';
+            buttonElement.innerHTML = '🔊 Listen';
           }
           if (onCompleteCallback) onCompleteCallback();
         });
@@ -383,7 +297,7 @@
         audio.onerror = () => {
           if (buttonElement) {
             buttonElement.classList.remove('speaking');
-            buttonElement.innerHTML = '🔊 Listen (Blocked)';
+            buttonElement.innerHTML = '🔊 Listen';
           }
           URL.revokeObjectURL(audioUrl);
           if (onCompleteCallback) onCompleteCallback();
@@ -393,7 +307,7 @@
         console.error("TTS Network Error:", err);
         if (buttonElement) {
           buttonElement.classList.remove('speaking');
-          buttonElement.innerHTML = '🔊 Listen (Failed)';
+          buttonElement.innerHTML = '🔊 Listen';
         }
         if (onCompleteCallback) onCompleteCallback();
       }
@@ -401,7 +315,7 @@
 
     function renderHistory() {
       if (savedConversations.length === 0) { 
-        historyList.innerHTML = `<div style="color: var(--text-muted); font-size: 0.8rem; padding: 8px;">No recent chats</div>`; 
+        historyList.innerHTML = `<div style="color: var(--text-muted); font-size: 0.8rem;">No recent chats</div>`; 
         return; 
       }
       historyList.innerHTML = '';
@@ -526,7 +440,7 @@
         const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
           method: "POST",
           headers: {
-            "Authorization": `Bearer ${groqApiKey}`,
+            "Authorization": `Bearer ${GROQ_API_KEY}`,
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
