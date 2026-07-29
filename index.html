@@ -148,6 +148,29 @@
         </div>
       </div>
 
+      <!-- Select Model Modal -->
+      <div class="modal-overlay" id="modelModal">
+        <div class="modal-content">
+          <div class="modal-title"><span>Select Model</span><button class="close-modal" id="closeModelModal">&times;</button></div>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); border-radius: 8px; cursor: pointer;">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-weight: 600; font-size: 0.9rem;">Sol A1</span>
+                <span style="font-size: 0.75rem; color: var(--text-muted);">(Selected)</span>
+              </div>
+              <div style="width: 10px; height: 10px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 10px #22c55e;" title="Online"></div>
+            </div>
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; opacity: 0.5; cursor: not-allowed;">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-weight: 600; font-size: 0.9rem; color: var(--text-muted);">Sol Premium A2</span>
+                <span style="font-size: 0.75rem; color: #f87171;">Coming Soon</span>
+              </div>
+              <div style="width: 10px; height: 10px; border-radius: 50%; background: #ef4444; box-shadow: 0 0 10px #ef4444;" title="Offline"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <aside class="sidebar" id="sidebar">
         <div class="sidebar-top"><span>Nep AI</span></div>
         <div class="sidebar-actions">
@@ -166,6 +189,7 @@
           <div class="header-left-group">
             <button class="menu-toggle" id="menuBtn" title="Toggle Sidebar">&#9776;</button>
             <button class="header-settings-btn" id="headerSettingsBtn" type="button">⚙️ <span>Settings</span></button>
+            <button class="header-settings-btn" id="selectModelBtn" type="button">🤖 <span>Select Model</span></button>
           </div>
           <div class="neon-title">Nep AI</div>
         </header>
@@ -223,6 +247,10 @@
       const saveSettingsBtn = document.getElementById('saveSettingsBtn');
       const themeSelect = document.getElementById('themeSelect');
 
+      const selectModelBtn = document.getElementById('selectModelBtn');
+      const modelModal = document.getElementById('modelModal');
+      const closeModelModal = document.getElementById('closeModelModal');
+
       let currentTheme = localStorage.getItem('nep_ai_theme') || 'theme-crimson-red';
       document.body.className = currentTheme;
       themeSelect.value = currentTheme.replace('theme-', '');
@@ -246,6 +274,12 @@
       const closeSettings = (e) => { if(e)e.preventDefault(); settingsModal.classList.remove('active'); };
       settingsBtn.onclick = openSettings; headerSettingsBtn.onclick = openSettings; closeModal.onclick = closeSettings;
       settingsModal.onclick = (e) => { if (e.target === settingsModal) closeSettings(); };
+
+      const openModelModal = (e) => { if(e) e.preventDefault(); modelModal.classList.add('active'); };
+      const closeModelModalFunc = (e) => { if(e) e.preventDefault(); modelModal.classList.remove('active'); };
+      selectModelBtn.onclick = openModelModal;
+      closeModelModal.onclick = closeModelModalFunc;
+      modelModal.onclick = (e) => { if (e.target === modelModal) closeModelModalFunc(); };
       
       saveSettingsBtn.onclick = (e) => { 
         e.preventDefault(); 
